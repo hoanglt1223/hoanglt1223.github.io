@@ -1,0 +1,632 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>HTTP and Web Servers</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="0952af46-6089-416b-bee2-7a46f6a42517" class="page sans"><header><h1 class="page-title">HTTP and Web Servers</h1></header><div class="page-body"><p id="675271b6-7bf5-4a7f-a274-e9e3bd89c092" class="">
+</p><p id="4ac31136-2976-49a3-a088-4adf9e277cda" class="">HTTP (Hypertext Transfer Protocol)<em> </em>is the language that web browsers and web servers speak to each other. Example, Request a web page or download a file or watch a video, it is HTTP that makes it possible.<strong>1 — Building Blocks Of HTTP</strong></p><figure id="d8c43bb1-0902-4fb0-8bb4-1da91ba6d896" class="image"><a href="https://hackernoon.com/photos/ODqpGrKgCbTLUFU0tkLq9IXHAqt2-9r1k32nu"><img src="https://hackernoon.com/photos/ODqpGrKgCbTLUFU0tkLq9IXHAqt2-9r1k32nu"/></a></figure><p id="de7e393d-1080-4714-8957-7ce6d2c49506" class="">An <strong>HTTP transaction</strong> always involves a Client and Server. Loading a page may take many requests sometimes to different servers. Example, When you are reading a News on News Website you are requesting the content from the server where it has been hosted and when you are watching an embedded video from the same page, you may be requesting the video from another web server such as a YouTube Web Server.</p><p id="1047852f-9201-409d-9926-3d916a840767" class="">A <strong>Web address</strong> is also called a <strong>URI (Uniform Resource Identifier)</strong>. From a web user’s view, URI is just a piece of text that you put into your web browser that tells it which page to go. URI is made up of several different parts.</p><p id="fa9e9d52-5355-4cd5-aef4-39074865b3ad" class=""><strong>Hostname — </strong>is a part of the URI, that tells the browser which web server to connect to. Example, <a href="http://www.twitter.com/?ref=hackernoon.com">www.twitter.com</a></p><p id="7b587612-0383-415b-a789-3e51f3b08123" class="">The browser has to extract the hostname from the URI, look it up to find the <strong>IP Address</strong>, and then connect to the right <strong>port number</strong> on that IP address. Example, <strong>104.244.42.1:700</strong></p><h2 id="5d95af0a-7073-4fb6-b927-42e5a7dbb2dc" class=""><strong>2 — Web Server and Client Programs Communication</strong></h2><p id="99d7fe4b-fc3b-4461-8ca9-23ddcf87b2eb" class=""><strong>Types of HTTP Requests</strong></p><p id="9a27295b-33c5-4d76-a3ce-fd7ade014f2b" class="">Every request contains an <strong>HTTP verb or method</strong>, which tells the server what the client is asking it to do.</p><ol id="81f233ca-12e2-4bde-bb03-05583aaae963" class="numbered-list" start="1"><li><strong>GET</strong></li></ol><ol id="5321d0b3-93fe-4038-a3ef-5a6531494feb" class="numbered-list" start="2"><li><strong>POST</strong></li></ol><ol id="adceb1ad-c3d3-4adc-8037-d7ec8e1330d2" class="numbered-list" start="3"><li><strong>PUT</strong></li></ol><ol id="9c178f11-2737-46e8-9411-267efd5cd5c8" class="numbered-list" start="4"><li><strong>PATCH</strong></li></ol><ol id="a82314a6-0721-4730-a20d-4c70c5cf8577" class="numbered-list" start="5"><li><strong>DELETE</strong></li></ol><p id="d662e543-8389-4f8c-8bfc-7f457bc8c8ba" class=""><strong>1 — GET</strong></p><p id="d6e05a38-dd4c-4aad-881c-629ed951c387" class="">GET is one of many HTTP verbs or methods. This is what browser use whenever they ask a server to send them a copy of a web page or an image or another request. HTTP Response to a GET request is going to be whatever it is that the server has to send back to fulfill the client’s request. That could be a piece of HTML or an image or some other data. The GET method is really for requesting a copy of a resource.</p><p id="14a44fc5-eda1-4835-8c2c-7a6d7ac0fb6b" class="">As a software developer, you will deal with a lot of different formats — HTML, XML, CSV, JSON, PNG, SVG, MP3. Data formats that are really common for Web APIs is called JSON (JavaScript Object Notation), it’s based on the syntax of JavaScript.</p><p id="2988d012-47b6-48cd-9b7d-bc2faa95f9d4" class="">One of the parts a URI can have is a query part.</p><p id="101ae9e0-ddc2-48eb-9934-791f9dfa701f" class=""><em>Example: </em><a href="https://www.google.com/search?q=hackernoon&amp;ref=hackernoon.com"><em>https://www.google.com/search?q=hackernoon</em></a></p><p id="e1f3685b-1dd9-4723-8ed4-e682f66e306a" class="">Most of the time, query parameters don’t get into a URI by the user typing them out into the browser. Query parameters often come from a user submitting in HTML form.</p><p id="8204adcf-a4f4-4cb5-9430-0de5b5640086" class="">Sending HTTP Request over to the server is defined by HTTP Request Line.</p><p id="ba99e494-549b-46df-b6d9-d91d0dc1b1be" class=""><strong>Method Request-Target HTTP-Version</strong></p><p id="119f2f10-9523-406f-850f-79eb10d5fbac" class=""><em><strong>GET </strong></em><a href="http://get/%20http//www.w3.org/pub/WWW/TheProject.html%20HTTP/1.1?ref=hackernoon.com"><em><strong>http://www.w3.org/pub/WWW/TheProject.html</strong></em></a><em><strong> HTTP/1.1</strong></em></p><p id="fa8558de-c4db-4d85-b385-cf0cd93c58b9" class="">Here GET is the method, URI is the Request-target and HTTP/1.1 is the Version.</p><p id="a394200b-dd36-48da-bffa-f67374202be6" class=""><strong>2 — POST</strong></p><p id="bb6f2dd3-6236-4785-93c0-b561dd588db4" class="">Used a lot with Forms. POST is for things that act more or less like a form submission.</p><p id="2762de55-c49a-43c3-aada-4e84877cde31" class="">Ways to Architect a web app</p><ul id="5223ea50-db4b-42e0-ac7a-08f27c8a4161" class="bulleted-list"><li>Single page apps.</li></ul><ul id="ae9f707c-ac5e-4753-b00a-df380dfe4937" class="bulleted-list"><li>Apps with a lot of clients logic.</li></ul><ul id="96642d65-5e61-42af-972f-866a4369a41a" class="bulleted-list"><li>Apps that are almost entirely on the server.</li></ul><ul id="fdcbd3bf-c4f5-4ae7-aaeb-76a01279b70e" class="bulleted-list"><li>Apps with a whole bunch of different servers.</li></ul><p id="281598f4-9ad4-4cb2-b525-2fb3e2031017" class="">Common Design Pattern for Server side web apps using forms.</p><p id="7a99b303-da75-43d1-8bf9-817515f26184" class="">POST-Redirect-To-GET Pattern</p><figure id="ac108f54-6589-4c7b-b239-410148bdc5d2" class="image"><a href="https://hackernoon.com/photos/ODqpGrKgCbTLUFU0tkLq9IXHAqt2-lr783264"><img src="https://hackernoon.com/photos/ODqpGrKgCbTLUFU0tkLq9IXHAqt2-lr783264"/></a></figure><p id="7fc11afb-d3b6-4bb4-8ce2-b7da65357ad3" class="">POST-REDIRECT-GET is a pattern that says a POST action should always REDIRECT to a GET action. This pattern is meant to provide a more intuitive interface for users, specifically by reducing the number of duplicate form submissions.</p><p id="5d378d82-73e1-43d4-a0bf-c4d43731deea" class="">A server that accepts requests as a web server, can sometimes make a request as a web client.</p><p id="fba1c820-cbfe-44ce-a3fb-c8d2436f3d4f" class=""><strong>3 — PUT</strong></p><p id="37e5cfbd-f098-4b5c-a177-f08905691751" class="">The PUT method completely replaces whatever currently exists at the target URL with something else. With this method, you can create a new resource or overwrite an existing one given you know the exact Request-URI. In short, the PUT method is used to create or overwrite a resource at a particular URL that is known by the client.</p><p id="427400f2-f163-4f68-a200-a5ff7dedcb19" class=""><strong>4 — PATCH</strong></p><p id="c01eeada-3d8d-4b95-9458-8c432f8e16f4" class="">The PATCH method is a request method supported by the HTTP protocol for making partial changes to an existing resource. The PATCH method provides an entity containing a list of changes to be applied to the resource requested using the HTTP URI. The list of changes is supplied in the form of a PATCH document.</p><p id="dd630bed-0511-444a-acbb-639f1b554a33" class=""><strong>5 — DELETE</strong></p><p id="6d3b122a-35e0-4f62-a0ff-d7877f69e27d" class="">HTTP DELETE request method deletes the specified resource.</p><p id="4e934170-63ef-4c34-be02-c5a73ecf44c8" class="">Syntax: DELETE /file.html HTTP/1.1</p><h2 id="12e99286-db38-411b-9ea1-e55dfb80b926" class="">3 — Web Hosting, Web Services, and Cookies</h2><p id="f1149e17-9e1c-422a-b35c-09430b98c8d7" class=""><strong>Important Terminologies</strong></p><p id="89fadf19-ecf2-4596-bb45-6fbbf6fa9ee1" class=""><strong>URL Shortening</strong> — A URL shortener is a Web site that will create a short Uniform Resource Locator (URL) or Web page address from a long one so that the short version, which is easier to remember and enter, can be used instead.</p><p id="a3106c74-fb6f-421e-9c6d-46b891f52e9a" class=""><strong>Web Cookies</strong> — A small text file (up to 4 KB) created by a website that is stored in the user’s computer either temporarily for that session only or permanently on the hard disk (persistent cookie). Cookies provide a way for the website to recognize you and keep track of your preferences.</p><p id="b3a05546-14c2-41e4-8048-82a9b040c72b" class=""><strong>Localhost</strong> — “Localhost” refers to the local computer that a program is running on. For example, if you are running a Web browser on your computer, your computer is considered to be the “localhost.” … The local machine is defined as “localhost,” which gives it an IP address of 127.0.0.1.</p><p id="fcd13270-a469-41d9-85ff-b98375ad91bf" class=""><strong>Deployment </strong>— In its IT context, deployment encompasses all the processes involved in getting new software or hardware up and running properly in its environment, including installation, configuration, running, testing, and making necessary changes.</p><p id="a006b79d-478d-40cb-81c8-bc0a3d16c18e" class=""><em>Popular Web Servers</em> — These specialized web servers handle a large number of requests very quickly.</p><ol id="a0a1b783-9ca4-4f2c-b176-d5ed1303cd58" class="numbered-list" start="1"><li>Apache</li></ol><ol id="68d5f7fa-97fa-4e9b-aeda-fef2e1bf842d" class="numbered-list" start="2"><li>NGINX</li></ol><ol id="54417dfc-99d9-4024-bc5b-4224449586b1" class="numbered-list" start="3"><li>Microsoft IIS</li></ol><p id="f378c0b9-66dc-4250-9130-edc38023e221" class=""><strong>HTTP Headers</strong></p><p id="f1af3b68-c8ed-447c-8561-dff78a7009d1" class="">There are a couple of particular headers, that is especially important for web applications.</p><ol id="6aea439a-331d-47c3-942d-5f8235a6272a" class="numbered-list" start="1"><li><em><strong>Set_Cookie</strong></em></li></ol><ol id="a846ac61-e6ec-452e-9654-51ca53e6fa66" class="numbered-list" start="2"><li><em><strong>Cookie</strong></em></li></ol><p id="d72c9f18-5ad3-4bd6-886f-1fd9020e656f" class="">These Headers are used to store and transmit cookies. An HTTP cookie is a piece of data that a web server asks a browser to store and send back. Cookies are immensely important to many web apps. They make it possible to stay logged in to a website or to associate multiple queries into a single session. And they are also used to track users for advertising purposes.</p><p id="f4325f11-0b1d-4b25-98e7-00688cac4fed" class=""><strong>HTTPs</strong></p><ol id="31e9ad0d-9862-43a5-b9ba-e6145a077c77" class="numbered-list" start="1"><li>An encrypted version of HTTP.</li></ol><ol id="40d09f93-3f08-41a0-a27d-9ae62c914338" class="numbered-list" start="2"><li>HTTPS websites have a green lock on the address bar.</li></ol><ol id="91a8fab7-0128-48e0-b73b-748dad09a0c0" class="numbered-list" start="3"><li>https:// in the URI.</li></ol><ol id="ac92c383-b2ad-4e2a-8fe4-07fd323f19ad" class="numbered-list" start="4"><li>Originally HTTPs was used to protect the credit card information, passwords, and other high-security information.</li></ol><ol id="8ce92ec2-b5a1-49f6-9bd2-1f03bdd8c7c8" class="numbered-list" start="5"><li>As web security and privacy got more and more important, a lot of major sites started using HTTPs on every connection.</li></ol><ol id="a5867328-474b-41a6-8574-f4856a243995" class="numbered-list" start="6"><li>HTTPs does two really important things.</li></ol><ul id="fdd81917-9575-4e6a-bc37-7d4eddeb5a1d" class="bulleted-list"><li>It protects your data from the Eavesdroppers <em>(is the act of secretly or stealthily listening to the private conversation or communications of others without their consent) </em>on the<em> </em>network.</li></ul><ul id="9dd12b42-7920-467e-b46b-f6b5d23b6023" class="bulleted-list"><li>Checks the authenticity of the site you’re talking to.</li></ul><p id="4613830f-a8ee-458f-841b-7d3a1750c520" class="">APIs are a huge part of the modern web, a lot of web applications make use of a server-side part that exposes an API and the client side part that sends queries to that API.</p><p id="87c0ae5a-418a-4412-ae64-36c2338fead7" class=""><strong>HTTP</strong></p><p id="29ffaa8d-7406-4d1e-b6f7-31e66b88ff86" class="">The first version of HTTP didn’t even have a version number on it, but it was later called version 0.9. It only supported GET Requests and expected all Responses to be in HTML and it didn’t even have any Headers.</p><p id="22bac24c-7a1f-4337-9373-20d3aee5c9ca" class=""><strong>HTTP 1.0–1996</strong></p><p id="8c23b47f-0773-48e8-9ee4-7f90420179ab" class="">It added headers, POST Requests for forms, status codes and Content types.</p><p id="2f5f06f6-d634-4902-a63c-e920c55d2d01" class=""><strong>HTTP 1.1 — (1999–2007)</strong></p><ol id="6a04e6e3-36f6-4d21-8e05-92326811c602" class="numbered-list" start="1"><li>Improved Caching controls.</li></ol><ol id="08567cb5-b6a8-4671-9f4d-5059050df323" class="numbered-list" start="2"><li>Range Requests (Resuming downloads).</li></ol><ol id="1cd80fd3-c4cf-4b74-8c09-42ba34f4ba3b" class="numbered-list" start="3"><li>Transfer encoding (Compression).</li></ol><ol id="50751db2-d768-4458-af02-9718102c172b" class="numbered-list" start="4"><li>Persistent Connection.</li></ol><ol id="114b33fd-2a4b-44af-a6e9-ebae009f1273" class="numbered-list" start="5"><li>Chunk Messages.</li></ol><ol id="4f9ef91e-e700-4a2d-81ff-02db8649b026" class="numbered-list" start="6"><li>Ability to host multiple websites on the same server and IP Address by using the HOST header.</li></ol><p id="0ffaaa46-68c0-4a80-873e-63555f5ac705" class=""><strong>HTTP 2–2012</strong></p><ol id="14bf2e77-081e-42bf-a1e3-cfe16cf66d33" class="numbered-list" start="1"><li>Much more efficient especially for busy services.</li></ol><ol id="fb3eec67-b406-47fd-a638-663d13dc8012" class="numbered-list" start="2"><li>Multiplexing (Many requests at once).</li></ol><ol id="d53afe8b-d2d4-4ed9-a43c-10acd7cf9e08" class="numbered-list" start="3"><li>Better Compression.</li></ol><ol id="912aa7ec-9767-4f39-b1b4-c95185af53fb" class="numbered-list" start="4"><li>Server push.</li></ol><p id="03369956-0303-4fa6-973d-65602ab74131" class=""><strong>HTTP Status Codes</strong></p><ol id="15096760-ed27-42e0-b477-84b96ac0d042" class="numbered-list" start="1"><li><em>200 — OK, Success</em></li></ol><ol id="63137fa8-a59c-4e3e-95cf-5bbf17e660b6" class="numbered-list" start="2"><li><em>301 — Moved Permanently</em></li></ol><ol id="e532bcf9-4d9e-4062-bb1a-c9627ae6cc56" class="numbered-list" start="3"><li><em>302 — Found, Redirected to new URL</em></li></ol><ol id="576f6c47-de37-48ed-9f7a-1c12fc324629" class="numbered-list" start="4"><li><em>304 — Not Modified</em></li></ol><ol id="16182bf5-2908-4a09-a939-639bd7dc862b" class="numbered-list" start="5"><li><em>401 — Unauthorised</em></li></ol><ol id="4f0b843f-89ce-4555-9df6-e4e6057099d0" class="numbered-list" start="6"><li><em>403 — Forbidden</em></li></ol><ol id="41d59731-7982-4122-8e96-f0bbab331f19" class="numbered-list" start="7"><li><em>404 — Not Found</em></li></ol><ol id="f6eec6c1-1052-4d98-bfee-d549b2e4e8c3" class="numbered-list" start="8"><li><em>418 — I’m a Teapot, (April Fool)</em></li></ol><ol id="97de31ff-7a9d-4bfb-8581-f0ae0b3c2582" class="numbered-list" start="9"><li><em>500 — Internal Server Error</em></li></ol><ol id="8f90022d-0c2d-474c-b6fe-cefc61cb1d31" class="numbered-list" start="10"><li><em>504 — Gateway timeout (Timeout loading)</em></li></ol><figure id="a6b8f77f-2bf9-4f0e-b685-9552597307e5" class="image"><a href="https://hackernoon.com/photos/ODqpGrKgCbTLUFU0tkLq9IXHAqt2-dmjd32ao"><img src="https://hackernoon.com/photos/ODqpGrKgCbTLUFU0tkLq9IXHAqt2-dmjd32ao"/></a></figure><p id="18f46465-3601-4570-904d-e60fe71c0160" class=""><strong>Web Hosting</strong></p><p id="ccb3eeed-8aac-485b-b388-5c7a79dd3bef" class="">Web hosting is a service that allows organizations and individuals to post a website or web page onto the Internet. A web host, or web hosting service provider, is a business that provides the technologies and services needed for the website or web page to be viewed on the Internet. Websites are hosted or stored, on special computers called servers. When Internet users want to view your website, all they need to do is type your website address or domain into their browser. Their computer will then connect to your server and your web pages will be delivered to them through the browser.</p><p id="ae35a5a6-1e81-4a1c-8a73-c79ed6ff3df3" class="">Most hosting companies require that you own your domain in order to host with them. If you do not have a domain, the hosting companies will help you purchase one.</p><p id="cff98b67-bbd7-4a73-8739-11900a4e0af5" class=""><strong>What is Web Service?</strong></p><p id="2f5e8e66-6edc-4de7-b381-15a5840384ba" class="">Web service is a standardized medium to propagate communication between the client and server applications on the World Wide Web.</p><p id="d65a738a-67e2-4c4e-a6d2-4bae7a4453e3" class="">Web services provide a common platform that allows multiple applications built on various programming languages to have the ability to communicate with each other.</p><p id="735c06f0-d030-4fc8-85da-dd6ebd90a777" class=""><strong>SOAP — </strong><em>Simple Object Access Protocol</em></p><p id="fa1b1187-173c-40b6-bfd7-425044afcd43" class="">SOAP was developed as an intermediate language so that applications built on various programming languages could talk quickly to each other and avoid the extreme development effort.</p><p id="79c9bfb9-12f7-4304-a958-cc8d5ca17bdf" class=""><strong>WSDL </strong>— <em>Web Services Description Language</em></p><p id="b8993fab-7c83-4372-9572-1bd4bab56279" class="">WSDL is an XML-based file which tells the client application what the web service does and gives all the information required to connect to the web service.</p><p id="aa425935-3a72-4ce8-bf1f-b664507259ee" class=""><strong>REST</strong> — <em>REpresentational State Transfer.</em></p><p id="23ac0538-4dde-402b-a3bc-b2cc153668e3" class="">REST is used to build Web services that are lightweight, maintainable, and scalable.</p><p id="51eeb99a-7545-4d9d-adb3-e37318f1885f" class="">The Concepts cover Introductory level of understanding of HTTP and Web Servers, which is enough to give you a quick start in your work. Thanks for reading and Have a Good Day… 😃. Also don&#x27;t forget to share with like minded people</p><p id="2e5735f1-3cb2-46f8-9b6a-6d7a5a0e994f" class="">
+</p><p id="e9d5e34a-a523-4a2e-ba4d-51af49ddca83" class="">
+</p><p id="72aa8355-7ad7-4954-8a12-e68e3af2ac61" class="">
+</p><p id="86ed44fc-8759-4111-b676-c0e7305cbd76" class="">Link: <a href="https://hackernoon.com/-721832n9">https://hackernoon.com/-721832n9</a></p><figure id="5f332b42-4df6-4ae8-8e20-4da7e8663b28"><div class="source"><a href="https://hackernoon.com/-721832n9">https://hackernoon.com/-721832n9</a></div></figure><p id="c278c199-8ef5-4c49-9e8a-c4e6705058f5" class="">
+</p></div></article></body></html>

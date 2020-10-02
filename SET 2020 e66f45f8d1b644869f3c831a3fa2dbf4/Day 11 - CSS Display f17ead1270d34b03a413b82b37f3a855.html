@@ -1,0 +1,660 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Day 11 - CSS: Display</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="f17ead12-70d3-4b03-a413-b82b37f3a855" class="page sans"><header><h1 class="page-title">Day 11 - CSS: Display</h1></header><div class="page-body"><h1 id="728b4ed8-2375-480c-83da-a3292d2ad4ea" class=""><mark class="highlight-red">Preview</mark></h1><ul id="76dd5761-b15f-49dc-a1f1-3a75a37a0c6e" class="bulleted-list"><li>Các vấn đề khi làm BTVN</li></ul><ol id="9f567124-91a0-4c85-a511-b21fd3ac4d85" class="numbered-list" start="1"><li>Đặt tên theo BEM: 
+_ sợ đặt tên dài (điểm yếu của BEM)⇒ đừng sợ, dài ntn cũng đc
+_ sợ đặt nhầm block_ <em>element. Block</em>_element đi theo cặp, khi xuống phần tử con thì đặt lại cặp Block_element mới.
+</li></ol><ol id="ba8cb3a9-df30-4be6-968f-ed52d41aa461" class="numbered-list" start="2"><li>Layout nhiều:
+<strong>_ làm quá chi tiết: ⇒ chia thành component (não ng thường chỉ nhớ từ 5-7 vật)
+⇒ cứ 5 lớp thì tách thành component</strong>
+</li></ol><ol id="3f716a67-219b-4bc8-a6f1-767b4e220394" class="numbered-list" start="3"><li>Chưa biết nhóm hợp lý</li></ol><p id="03fb817f-13d1-4828-a96f-c35763c7c9f8" class="">_ nếu có nhiều nút nhìn giống nhau nhưng chức năng khác nhau 
+⇒ vẫn nhóm vì nhóm theo hình dạng chứ ko phải chức nănq </p><p id="92c6e5d7-a56a-4b88-8709-77b61de90652" class="">
+4. Thiếu từ</p><p id="e88e2253-c0f3-416d-9bee-9bf64ab546c1" class="">⇒ hỏi a Đăng =))</p><p id="2ad9f239-28cb-4dbf-b0e2-2818a5fe3bb0" class="">_ Tìm framework: có những cái đặt tên chính xác những thành phần, phần tử
+VD: bootstrap 1-4, bulma, material-ui (của Google) đặc trưng bởi hiệu ứng gợn sóng (crible), </p><p id="5f0e3c2e-529f-4a4c-84be-ce72a933edf5" class="">ant-design (của khựa), w3school cũng có nhưng ko dùng</p><p id="26df1c8e-b178-488c-ad66-ef3ac46f718c" class="">_ dùng kèm nhiều framework lại vs nhau cũng đc (nói eng lẫn viet)</p><h1 id="6f9b9e88-5962-4b0f-bf2e-c76d711b2e7c" class=""><code><strong>CSS</strong></code></h1><p id="825dd4fa-9d02-4d08-82ce-137a6c5287b7" class="">_ Học 2 properties: Display, Position</p><p id="db0ad2f1-4cef-4625-b690-1fe81dfece5b" class="">
+</p><ul id="5d961ade-ac6e-4bd7-8988-bb6469ab7a39" class="bulleted-list"><li>Display</li></ul><p id="53a48e53-e634-4d25-bff0-e28df257ff47" class="">_ Cấu trúc: 
+selector: {</p><p id="8ee04857-14a6-4396-b211-15110d253d8f" class="">... properties                   ← key: value</p><p id="3abfcc17-a434-4e13-89f6-5a402b6f803b" class="">}</p><ul id="ecaf00b4-d91f-4d24-9b43-2cc8a68372c2" class="bulleted-list"><li>Display: inline đã có xuất hiện ở 1 số thành phần như &lt;span&gt; </li></ul><p id="37c9057d-9645-4cba-9349-ea2fbffb9436" class="">_ đặc tính: 
+1. ko thể set width, height, margin (trên browser ko chạy, viết vào code ko báo lỗi)
+ ⇒ editor phải cài gì đó để báo
+_ margin ko đc bao gồm top và bottom</p><p id="9dcbcb86-6853-4eeb-88ba-2f34730cd1b0" class="">2. element cùng cấp sẽ nằm cùng 1 dòng (ý nghĩa của từ inline)
+</p><ul id="5bdf7eda-a885-446a-9bc8-c3cc735220d1" class="bulleted-list"><li>Display: block </li></ul><p id="ebdec4ae-4163-49fb-bc94-1f4b3681d3ae" class="">_ đặc tính:</p><ol id="471fa96f-86ea-4afb-b09e-bcb6078d77a0" class="numbered-list" start="1"><li>có thể set width, height, margin, padding như bth</li></ol><ol id="8917caf2-6910-4bf1-b304-506bf8ecb000" class="numbered-list" start="2"><li>Một element chỉ nằm trong một dòng: có giảm width hay height gì cũng sẽ bị bù vào bởi margin</li></ol><p id="c257cc23-3770-4780-b15a-034463020c63" class="">
+</p><ul id="16aaca04-3995-4dc0-a6d6-46ce74960eef" class="bulleted-list"><li>Inline-block</li></ul><p id="1f1183bc-8c26-4982-8721-696bfbf57264" class="">_ đặc tính:</p><ol id="4f139886-605a-4612-87c6-c095ab871313" class="numbered-list" start="1"><li>có thể set width &amp; height</li></ol><ol id="3a34a0a5-c9fb-4289-b514-bd379ffe6d45" class="numbered-list" start="2"><li>các thuộc tính cùng cấp có thể nằm chung dòng đc</li></ol><p id="e250415d-511c-45d1-a0e5-c44f5141fbbc" class="">
+</p><p id="b9e9fc95-4d5f-4864-b5eb-ecffb766ddc7" class="">Note: lúc nào cần chung 1 dòng thì xài block ko thì inline-block
+ ⇒ kinh nghiệm thực tế: inline ít đc xài nhất</p><p id="62e540b1-7b12-4a9a-bea8-1fd5e0d06fb0" class="">
+_ Muốn chữ vào giữa: text_align: center</p><p id="1d655274-0ac7-4b01-9f71-b66248ecb3b5" class="">_ Muốn chữ vào giữa ở dưới cuối: set d1 = d-d2 (cách ko chính thống) or vertical align.</p><p id="6f956bcb-d647-4eb2-bf74-cd9123f13930" class="">
+</p><ul id="18300254-c1e2-4424-9682-97b5ed681e65" class="bulleted-list"><li>Flex: nên nghĩ tới flex cuối cùng
+chia làm 2 phần. 1 thằng bao ở ngoài gọi là container và 1 thằng ở trong là item. Flex là chia theo tỉ lệ, từ tổng chia ra</li></ul><figure id="833953e3-c3a0-4fa1-88c5-5fe75088fd5c"><a href="https://css-tricks.com/snippets/css/a-guide-to-flexbox/" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">A Complete Guide to Flexbox | CSS-Tricks</div><div class="bookmark-description">Our comprehensive guide to CSS flexbox layout. This complete guide explains everything about flexbox, focusing on all the different possible properties for the parent element (the flex container) and the child elements (the flex items). It also includes history, demos, patterns, and a browser support chart.</div></div><div class="bookmark-href"><img src="https://css-tricks.com/favicon.ico" class="icon bookmark-icon"/>https://css-tricks.com/snippets/css/a-guide-to-flexbox/</div></div><img src="https://css-tricks.com/wp-content/uploads/2018/12/guide-flexbox.png" class="bookmark-image"/></a></figure><ol id="c98e08a3-4bca-4130-8ac6-85c0679014fd" class="numbered-list" start="1"><li>Container: </li></ol><p id="10b5ed50-2565-443c-9f53-81771428ebde" class="">Note: phải đc set display là flex trc<div class="indented"><p id="1366c2c9-59be-4305-a39a-8534224b5334" class="">_ flex_ direction: row (item nằm ngang) (trái qua phải) (item1 → item2)</p><p id="b366ef69-b474-4c84-832a-cdd4e555aba0" class="">_                         : column (item nằm dọc) (trên xuống dưới)</p><p id="269eac8c-5141-4bb9-a560-153ad1f12d46" class="">_                         :row_reverse: (phải qua trái)</p><p id="bf09fd00-f930-40b2-953b-4f9b977290e3" class="">_                         :column_reverse: (dưới lên trên)</p></div></p><p id="3133f586-2f1d-41ec-929b-45e50f34b08e" class="">_ Note: Nếu ko set thì mặc định là row<div class="indented"><p id="57111737-32b0-45b9-885f-ea4ae9820cd1" class="">_ item 1 có flex 1, item 2 có flex 2 ⇒ khoảng cách chia 3.</p><p id="ad3256e5-cfbf-4fb7-9233-bd0ceaa54256" class="">_ flex 1 là 1 phần, flex 2 là 2 phần</p></div></p><p id="a17cd1eb-c864-4a48-8957-8c11c5e6bad8" class="">_ Note: nếu để mặc định là chia 1</p><p id="e2a0feac-32af-499f-a035-310a25ca51c6" class="">
+</p><p id="5c71effb-d197-4b47-81d2-88f632518262" class="">_ VD khác: item 1 có flex 1, item 2 có flex 3 ⇒ 4 phần</p><p id="9c0ebf55-0797-42c4-8127-421011abbbcd" class="">
+</p><ul id="5252ac62-fa58-4a36-82a3-0d390ad268f1" class="bulleted-list"><li>justify_content: khá giống text align. Quyết định những item bên trong sẽ đc sắp xếp ntn
+</li></ul><p id="664895d6-220d-45e9-a094-583209c10282" class="">_ justify_content: center </p><p id="8125bec2-d914-49f0-98e5-ba28e6898159" class="">⇒ 2 item sẽ nằm ở giữa cách đều 2 bên container 1 khoảng d (vào giữa)<div class="indented"><p id="8e7ebb85-f028-4b92-a8d5-dd11071720f4" class="">_                          : space-around: các item sẽ cách đều 2 bên container 1 khoảng d và cách nhau 1 khoảng 2d</p><p id="8a447880-7129-4720-a096-de7d89c9b9f2" class="">_                          : space-evently: khoảng cách giữa 2 bên = khoảng cách ở giữa</p><p id="d1d05ec7-49f1-44fa-ade0-c07147f1bc06" class="">_                          : space-between: những thằng con nằm sát ra ngoài và cách đều nhau
+_                          : flex-start: những thằng con dồn về đầu</p><p id="11065023-510b-4a77-bbbc-615dd9f2a791" class="">_                          : flex-end: những thằng con dồn về cuối</p><p id="12e5e04d-7a88-4620-ba1a-e096bb6ededc" class="">
+</p><figure id="40b53762-5694-4b19-9d32-944b47b4553c" class="image"><a href="Day%2011%20-%20CSS%20Display%20f17ead1270d34b03a413b82b37f3a855/Untitled.png"><img style="width:192px" src="Day%2011%20-%20CSS%20Display%20f17ead1270d34b03a413b82b37f3a855/Untitled.png"/></a></figure><p id="efdb140c-3e07-47b3-a30f-5ad7ed1ca1a1" class="">
+Allign-items 
+_ align-items: center ⇒ nằm giữa</p><p id="96702232-1576-4755-b739-7eb577eea661" class="">_                    : flex-start</p><p id="9de4e3fc-bce4-4a4d-a97a-c2aaf9da2b59" class="">_                    : stretch ⇒ kéo height, width item ra = với height, width container</p></div></p><ul id="0a02870f-6609-4682-b244-9660c562612e" class="bulleted-list"><li>Note: giá trị default của align-items là stretch<p id="bc9c3b44-5477-4f76-917f-6c64fc91ee7d" class="">_                     : baseline ⇒ căn giữa tất cả các item. Lấy 1 đường trung trực xong xếp các item vào giữa đường đó (rất ít khi xài) ⇒ có thể ko học</p><p id="6e01ca03-ac2b-430c-b5dc-28fd5f45c611" class="">_ line height là dựa vào thằng to nhất. (Độ cao của content)</p></li></ul><figure id="8f4774cc-6938-4d0d-a09e-851a91a819d8" class="image"><a href="Day%2011%20-%20CSS%20Display%20f17ead1270d34b03a413b82b37f3a855/Untitled%201.png"><img style="width:240px" src="Day%2011%20-%20CSS%20Display%20f17ead1270d34b03a413b82b37f3a855/Untitled%201.png"/></a></figure><figure id="3c12a650-a88c-4c53-b854-8454be6350e6"><div class="source"><a href="https://flexboxfroggy.com/">https://flexboxfroggy.com/</a></div></figure><ul id="0b3b298d-7cba-49fc-8208-a12668831d1f" class="bulleted-list"><li>Note: khác center ở chỗ đáy của center nằm trên đường này, còn baseline là nằm giữa đường</li></ul><p id="34eade87-c493-4f22-a055-305a5b95c28e" class="">_ align-self:
+
+
+
+</p><p id="417aa8ad-76ba-4240-a4fe-c3dd9c56068f" class="">2. Item</p><p id="43607fb7-67fa-431c-a7f6-f52b5a6dee78" class="">
+</p></div></article></body></html>

@@ -1,0 +1,641 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Day 16 - Dev/SE and DOM: basic</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="0908d2eb-c3a5-423d-9bfb-6796a0207bdb" class="page sans"><header><h1 class="page-title">Day 16 - Dev/SE and DOM: basic</h1></header><div class="page-body"><h1 id="df7d0554-a256-4045-b2d3-40f9a0a04be6" class="">I. Comparison</h1><h3 id="0879e9d5-7849-472d-a102-46c85ae597e8" class="">1. Developer </h3><ul id="afcd1ebc-8317-475e-9157-e23fcdc42963" class="bulleted-list"><li>Mới ra trường → Đi làm thì vị trí mà có thể apply vào được là Developer vì Developer <mark class="highlight-red"><strong>làm được trên codebase có sẵn</strong></mark></li></ul><ul id="18a7ae46-42a2-4528-a384-10de8b54f1df" class="bulleted-list"><li>Nhảy vào cái Project làm ngay</li></ul><ul id="98fce8f8-c4cf-4b2f-bb1f-9443514d8467" class="bulleted-list"><li>Code cho chạy (Solution hời hợt, giải pháp ngắn gọn → Trả task cho PM)</li></ul><ul id="a8474ee6-e595-420b-a05a-33801d3f7064" class="bulleted-list"><li>Nhận task xong cắm đầu làm (Solitary (Đơn phương độc mã - Nghĩ 1 mình là hay), creative)</li></ul><p id="852def13-2fd6-42ec-b38a-fa13ccfac489" class="">Thuật ngữ : boilerplate</p><h3 id="edf319dd-235e-4e10-b07d-4454a6a5846b" class=""><mark class="highlight-red">2. Engineer</mark></h3><p id="022548ef-6e5f-4987-ac41-0e02187ad01a" class=""><strong><mark class="highlight-red">Setup 1 codebase</mark></strong></p><ul id="baa2de95-482d-40f2-88e4-dd346e8701fc" class="bulleted-list"><li>Đánh giá tình hình trước → Thiết kế hệ thống dựa trên nhu cầu thực tế của cái dự án → Xây được cho dự án ở mức độ <strong><mark class="highlight-red">Enterprise</mark></strong></li></ul><ul id="8cb3b8f2-aad3-4828-b6a3-b2fbd323c80e" class="bulleted-list"><li>Kiếm Doc (Architect - High level cái app) đọc, tự viết doc, lên plan → Xong 3 bước này rồi <mark class="highlight-red"><strong>mới nhảy vào làm </strong></mark></li></ul><ul id="36514e51-e050-4d6e-884b-2b8697b0d6c3" class="bulleted-list"><li>Áp dụng Principle (Design Pattern, Engineer Practice - Test case sẽ được viết dựa trên user cases activity diagram, Tuân thủ Process) → <mark class="highlight-red"><strong>Giảm thiểu trục trặc trong quá trình phát triển sản phẩm → Sau 6 tháng thêm tính năng thì dự án không bị đội chi phí lên</strong></mark><mark class="highlight-yellow"><strong> </strong></mark><mark class="highlight-teal"><strong>(Productivity luôn giảm nhưng khi mình có quy chuẩn cụ thể thì nó sẽ giảm ít thôi!)</strong></mark></li></ul><ul id="d23afeed-915f-4b32-a912-ade00e9cf733" class="bulleted-list"><li><mark class="highlight-red"><strong>Cố gắng tuân thủ 1 System &amp; Collaborate</strong></mark></li></ul><p id="10719544-d992-4a20-abf0-b1b017faaabb" class=""><mark class="highlight-yellow">⇒ VỮNG LÝ THUYẾT TRƯỚC &amp;&amp; TEAMWORK &amp;&amp; TUÂN THỦ NGUYÊN TẮC</mark></p><p id="a6e8dccf-923b-47ed-bb97-2e1819e0e202" class="">Code xong suy nghĩ sau 6 tháng → Xem xét xem tính năng có tăng lên không ?</p><p id="1801bb75-4565-4899-aa5c-ad1ebfe48f1b" class="">cost per line ?</p><p id="ab6e0d83-26f9-4558-9303-64e58b0b2dbf" class="">
+</p><h2 id="cf419760-b47b-48e9-92f4-16fd60392b30" class="">II. DOM - Document Object Model</h2><p id="1b2517af-3acf-4de6-ba64-c7df58885d73" class="">Document</p><p id="5c4a7680-0acf-4a8e-baf9-7b439f1951de" class="">DOCTYPE</p><p id="c72ba3f5-a207-4ff1-a9aa-6628c83f4b2c" class=""><mark class="highlight-blue">&lt;html&gt;</mark><div class="indented"><p id="4a51362b-93d2-4e8d-b374-42b88368563f" class=""><mark class="highlight-blue">&lt;head&gt;</mark><div class="indented"><p id="454a7e37-f6f5-40b6-84da-e7b51d6c35a8" class=""><mark class="highlight-blue">&lt;body&gt;</mark></p></div></p><p id="3a524314-9aaa-4b1a-85e7-1bea71f8966d" class=""><mark class="highlight-blue">&lt;/head&gt;</mark></p></div></p><p id="dd70e455-89fa-417a-8994-7252607722da" class=""><mark class="highlight-blue">&lt;/html&gt;</mark></p><p id="a4d4e581-ad44-4913-a752-cc98419fd55a" class="">→ Màu xanh : đây là một cái Document</p><p id="ea2f551f-8625-481f-a69f-9bc894015921" class="">
+</p><p id="3ceb8446-9ce3-46e0-91ab-d724a6388a50" class="">Object</p><p id="2044ac56-b09c-4361-af73-3f73865bf0db" class="">
+</p><p id="93c11dce-ed1d-40f0-b1b1-1eeda374d68f" class="">Model</p><p id="a5062bad-de99-4b05-bfd6-861bb898e7e9" class="">→ Nhìn vào dự đoán được cái kết quả của mình sắp chạy ra</p><p id="c614497c-9859-4ade-95b5-2e2e7e59d5d6" class="">→ Cung cấp cho mình cái API</p><p id="c9d63e52-8503-4034-b1e8-5a879cf504ac" class="">
+</p><p id="cce0b740-5bca-4a57-8a4e-033386445e92" class="">? : Vậy Dom nó cung cấp cho mình cái gì ? </p><p id="f3bd3485-3451-4555-8ae9-c1354ea3852c" class="">→ Mô hình để tương tác giữa mình với máy</p><p id="99550a1d-b1f1-4f57-b472-69c0e7c64786" class="">→ Dùng API - (Application Programming Interface)</p><p id="90d4123c-1d6e-4b5c-ac20-0e55baaa72f5" class="">Nhưng để tương tác được mình <mark class="highlight-red"><strong>cần phải biết cấu trúc ở bên trong (Structure) &amp;&amp; cách nó vận hành, hoạt động (Mechanism)</strong></mark></p><p id="9f266f6e-c498-4428-b8f3-de667449d2c7" class="">
+</p><h3 id="d09449bf-2fbf-401a-a027-4685eb82975b" class="">CẤU TRÚC CỦA DOM</h3><p id="52e18f80-f787-4c2e-80bf-93fc04a53463" class="">1 thằng con CHỈ CÓ 1 THẰNG CHA</p><p id="2829045b-077e-4fde-a4cb-38248868b840" class="">1 thằng cha có thể CÓ NHIỀU THẰNG CON</p><p id="2cad06fc-2d29-4f71-a707-91cad5f7d480" class="">
+</p><p id="4d9e4c6d-af8e-4421-9f58-ffee464bb603" class="">Object lưu địa chỉ → Địa chỉ không bao giờ trùng nhau hết</p><p id="8120dbb4-74b8-49ee-962f-3cbf491cd2af" class="">? Đặt tag script liên kết file ở head với ở body có khác gì nhau không ? </p><p id="19d973bc-f009-4f0a-a0d7-32829f373eae" class="">→ Nó sẽ đọc từ trên xuống dưới </p><p id="04660d39-1e12-4234-b8bc-cd6410c05d2a" class="">? Có thể thay đổi CSS thông qua JavaScript không ? </p><p id="68b8b6d6-7713-429e-801a-b51ab62ce41f" class="">? Bây giờ không muốn gắn ở body </p><p id="4c3d6de8-1583-4e18-84b5-199130cbc341" class="">
+</p><p id="451c6261-51e3-4fe0-9a31-f00c7b46ae6b" class="">Các bước làm :</p><p id="11ebacf8-08a4-42cc-a7da-a6a5a3ec8cfc" class="">1. Design ra giấy</p><p id="d71e8f8b-c369-4bf3-bac2-d76ca201d931" class="">2. Phân tích </p><p id="645252fe-c792-492b-a590-b5686149d1b9" class="">3. Code  </p><h1 id="6b172872-1c4d-46ca-b5df-99d984f553b8" class="">DOM trong JS  <mark class="highlight-red">(Document Object Model)</mark>
+→ API (Application Programming Interface)</h1><p id="cc4d2cc1-3d05-452e-a66c-493c78892793" class="">
+</p><ul id="53118201-6bec-4b88-a115-422e2a2650e2" class="bulleted-list"><li>Dựa đoán output dựa trên input ⇒ cung cấp API để tương tác</li></ul><p id="0f134c9a-96c0-4699-8fc8-5bf5a2c6b1ae" class=""><em>Structure; Mechanism</em></p><p id="974ec82e-9c0d-4d89-8c90-0fc02c6f37e1" class="">Muốn thay đổi HTML, CSS bằng JS</p><ul id="e1bdf450-bb73-450b-a029-8aea7ce7994d" class="bulleted-list"><li>Gọi tên</li></ul><ul id="2ae7d5f4-0099-4951-85d2-4f22ccc81f0b" class="bulleted-list"><li>Thay đổi các thuộc tính</li></ul><p id="8a018743-07e9-434d-8af2-a75ee8c35e0f" class="">Việc xài Const trong object nếu chỉ thay đổi giá trị bên trong mà không thay đổi object thì vẫn ok</p><p id="ef9d39d4-c23e-4609-9ae9-628d69ce579b" class="">1 attribute có key và value. → Gán giá trị vào key</p><figure id="a655924c-3fd4-420b-8917-fbd8f4ce4c5e" class="image"><a href="Day%2016%20-%20Dev%20SE%20and%20DOM%20basic%200908d2ebc3a5423d9bfb6796a0207bdb/Untitled.png"><img style="width:1200px" src="Day%2016%20-%20Dev%20SE%20and%20DOM%20basic%200908d2ebc3a5423d9bfb6796a0207bdb/Untitled.png"/></a></figure><p id="69a1be72-316a-4375-8589-23f254ad9ad7" class="">
+</p><p id="2565b9bc-3ea1-4a1a-b6e5-e1f11d9995e8" class=""><strong><mark class="highlight-red">Đọc trên dưới ⇒ link Script ở vị trí khác nhau kq khác nhau</mark></strong></p><ul id="68cb95c9-f4cf-48d8-80db-85dcb8e66100" class="bulleted-list"><li>Cost per line: thước đo productivity </li></ul><p id="c600d0ed-9ff3-4270-a35f-053c9d509b64" class=""> - nếu đường trên cắt đường dưới ⇒ tạch còn nếu thoải thoải ko cắt </p><p id="d0a24bf8-86b6-4af9-8017-be55300f6ae9" class="">btvn:</p><p id="d673b78a-a381-4e5d-9722-90cc1fb7cf85" class="">
+</p><figure id="f437a832-1338-4256-a8d1-b8a47797914a" class="image"><a href="Day%2016%20-%20Dev%20SE%20and%20DOM%20basic%200908d2ebc3a5423d9bfb6796a0207bdb/Untitled%201.png"><img style="width:1516px" src="Day%2016%20-%20Dev%20SE%20and%20DOM%20basic%200908d2ebc3a5423d9bfb6796a0207bdb/Untitled%201.png"/></a></figure><p id="090221a7-ba1e-4014-b6e2-dbe900678b3c" class="">
+</p><ul id="9ed36f14-a9c9-44cd-b69f-b7193eacaa09" class="bulleted-list"><li>Vẽ Chess Board</li></ul><p id="df359627-0b2c-481b-bd1a-6447903d117f" class="">
+</p><figure id="bce2775a-bbbe-4f9b-b73e-26f2a55be55f" class="image"><a href="Day%2016%20-%20Dev%20SE%20and%20DOM%20basic%200908d2ebc3a5423d9bfb6796a0207bdb/Untitled%202.png"><img style="width:1526px" src="Day%2016%20-%20Dev%20SE%20and%20DOM%20basic%200908d2ebc3a5423d9bfb6796a0207bdb/Untitled%202.png"/></a></figure><p id="162425b6-3361-4852-8779-29cbf480023e" class="">
+</p></div></article></body></html>

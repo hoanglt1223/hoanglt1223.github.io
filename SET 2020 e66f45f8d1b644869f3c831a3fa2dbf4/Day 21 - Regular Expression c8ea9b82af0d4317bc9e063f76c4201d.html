@@ -1,0 +1,642 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Day 21 - Regular Expression</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="c8ea9b82-af0d-4317-bc9e-063f76c4201d" class="page sans"><header><h1 class="page-title">Day 21 - Regular Expression</h1></header><div class="page-body"><p id="77d5e1d6-9aff-43c9-b690-880aca5df5c5" class="">I. Intro
+Regular Expression
+- 1 đối tượng mang biểu thức. Tìm ra đoạn sub string match vs những biểu thức đó
+</p><ul id="6a66167c-93ec-40e4-92bc-41d79b283f7c" class="bulleted-list"><li>VD: tìm những đoạn văn bản theo những cú pháp mình đặt ra cho string đó, klq dài hay ngắn
+</li></ul><p id="b4aa0e19-4249-489f-a0ce-6b5010a49b51" class="">II. Cách tạo</p><p id="fa9557cf-96cd-4b26-af1d-353072a1ec27" class="">let a =/abc/ </p><p id="8d0e2c64-c852-4c7e-a4e9-443ed9a4dbee" class="">let b = new RegExp(&#x27;abc&#x27;) ⇒ mỗi language có 1 biến thể nhỏ</p><p id="525f3988-d1c5-4b3b-92ab-51997b448291" class="">
+</p><p id="33f2e688-84ae-498c-bbec-cf3e244d7c11" class="">III. Syntax</p><ul id="5c51d567-4c8a-41a8-8a6a-70ddedf919f6" class="bulleted-list"><li>. ⇒ match kí tự trừ những kí tự xuống dòng</li></ul><ul id="399ed792-7769-4431-8827-bdda26cb7ab4" class="bulleted-list"><li>\w ⇒ ko lấy abc, \W ⇒ lấy</li></ul><ul id="af484fe8-6a75-4b5c-887b-e4bed78f89de" class="bulleted-list"><li>\d, \D</li></ul><ul id="3f10e01d-81fa-4222-b540-4f6d2f1cc3b8" class="bulleted-list"><li>\s, \S</li></ul><ul id="a483d78b-88b4-47cf-850d-bb7cf9fca997" class="bulleted-list"><li>[abc] ⇒ </li></ul><ul id="51e8c59d-81fc-4d41-b714-9b033967371d" class="bulleted-list"><li>[^abc] ⇒ lấy những kí tự ko phải abc</li></ul><ul id="f3e5dc85-a224-4006-8efa-6037c65ff552" class="bulleted-list"><li>[a-g] ⇒ lấy bất kì kí tự nằm trong khoảng từ a-g</li></ul><ul id="1f900d22-7b56-4894-997c-a6650fe9344c" class="bulleted-list"><li>^ ⇒ trong ngoặc vuông thì là ko lấy   $</li></ul><ul id="2703c765-a7f7-4931-af80-e74d16105657" class="bulleted-list"><li>/d\b/: Lấy chữ d cuối cùng bên cạnh sự kết thúc. d ⇒ word boundary</li></ul><ul id="6f130a90-9a76-4a77-98e3-469e711f0847" class="bulleted-list"><li></li></ul><figure id="6f1e2ede-89e0-45b7-8225-436f79d0306d" class="image"><a href="Day%2021%20-%20Regular%20Expression%20c8ea9b82af0d4317bc9e063f76c4201d/Untitled.png"><img style="width:878px" src="Day%2021%20-%20Regular%20Expression%20c8ea9b82af0d4317bc9e063f76c4201d/Untitled.png"/></a></figure><p id="fb1ee13c-d4e9-4efc-954f-5d398647a3c2" class="">
+</p><figure id="6bded454-7af6-4ace-b137-f44fb47948f5" class="image"><a href="Day%2021%20-%20Regular%20Expression%20c8ea9b82af0d4317bc9e063f76c4201d/Untitled%201.png"><img style="width:800px" src="Day%2021%20-%20Regular%20Expression%20c8ea9b82af0d4317bc9e063f76c4201d/Untitled%201.png"/></a></figure><figure id="358f08cb-0781-480f-893e-4e32bcd24f2e" class="image"><a href="Day%2021%20-%20Regular%20Expression%20c8ea9b82af0d4317bc9e063f76c4201d/Untitled%202.png"><img style="width:405px" src="Day%2021%20-%20Regular%20Expression%20c8ea9b82af0d4317bc9e063f76c4201d/Untitled%202.png"/></a></figure><p id="343f2e9b-288a-4ef5-a0ba-fa388a642141" class="">
+</p><figure id="0d9eb32f-dea6-4146-a6cd-e5546be6d64f" class="image"><a href="Day%2021%20-%20Regular%20Expression%20c8ea9b82af0d4317bc9e063f76c4201d/Untitled%203.png"><img style="width:825px" src="Day%2021%20-%20Regular%20Expression%20c8ea9b82af0d4317bc9e063f76c4201d/Untitled%203.png"/></a></figure><figure id="8145aa22-1910-40d2-bc89-264ae42b8925"><a href="https://viblo.asia/p/bieu-thuc-chinh-quy-regex-trong-javascript-QpmleQ9mlrd" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">Biểu thức chính quy Regex trong javascript</div><div class="bookmark-description">Biểu thức chính quy ( regular expressions ) là các mẫu dùng để tìm kiếm các bộ kí tự được kết hợp với nhau trong các chuỗi kí tự. Trong JavaScript thì biểu thức chính quy cũng đồng thời là các đối tượng, tức là khi bạn tạo ra một biểu thức chính quy là bạn có một đối tượng tương ứng.</div></div><div class="bookmark-href"><img src="https://viblo.asia/favicon-128.png" class="icon bookmark-icon"/>https://viblo.asia/p/bieu-thuc-chinh-quy-regex-trong-javascript-QpmleQ9mlrd</div></div><img src="https://images.viblo.asia/fcaa9792-4ecb-4713-9932-b738f6be333e.png" class="bookmark-image"/></a></figure><p id="14a84a6f-e1b7-413d-b64a-b7504065868c" class="">IV. Bài Tập</p><ol id="d17b614c-85f8-4bc9-85d4-bee7711f5fca" class="numbered-list" start="1"><li>Lấy hết số
+</li></ol><figure id="07ec9131-0adf-478d-9c76-cd1e154e9b72" class="image"><a href="Day%2021%20-%20Regular%20Expression%20c8ea9b82af0d4317bc9e063f76c4201d/Untitled%204.png"><img style="width:1956px" src="Day%2021%20-%20Regular%20Expression%20c8ea9b82af0d4317bc9e063f76c4201d/Untitled%204.png"/></a></figure><p id="d0219974-23dc-4e78-8fd7-9d533c25af2a" class="">2. Lấy hết chữ</p><p id="f5d028c0-611a-4a32-929e-c0c24a3cab50" class="">
+</p><figure id="27a6d060-dad9-45ba-8a53-ac58ed5316ac" class="image"><a href="Day%2021%20-%20Regular%20Expression%20c8ea9b82af0d4317bc9e063f76c4201d/Untitled%205.png"><img style="width:2154px" src="Day%2021%20-%20Regular%20Expression%20c8ea9b82af0d4317bc9e063f76c4201d/Untitled%205.png"/></a></figure><p id="a5d414ac-0f8b-402b-8565-f6cdf83e4858" class="">3. Lấy kí tự a,e,f,g</p><p id="a2389561-7216-49b9-822a-ea475f22965c" class="">
+</p><figure id="b0e1a7b4-182a-456f-9f92-6bc4d2ca524e" class="image"><a href="Day%2021%20-%20Regular%20Expression%20c8ea9b82af0d4317bc9e063f76c4201d/Untitled%206.png"><img style="width:2180px" src="Day%2021%20-%20Regular%20Expression%20c8ea9b82af0d4317bc9e063f76c4201d/Untitled%206.png"/></a></figure><p id="9e66987f-86f7-4e58-9cd5-1ecbb0515371" class="">4. Lấy chữ cuối 1 từ</p><p id="809144c4-9378-4964-9003-e2c7947ef145" class="">5. Lấy những chữ ko phải kí tự cuối 1 từ</p><p id="bb4c7bfe-b96d-432c-8409-c935323492db" class="">6. Lấy chữ R đầu tiên của đoạn sting</p><p id="4233cb9f-f4e6-4341-9d02-d14d3dcd0ddb" class="">7. Lấy dấu . cuối cùng của đoạn stirng</p><p id="76021d96-49e1-448e-8bfe-eeabaa09fdb8" class="">
+</p><p id="9accc356-7646-4b02-be67-521518f71c26" class="">[a-zA-Z])\b</p><p id="dbdeb3fc-9b9e-4a80-9203-3280ef18ee5f" class="">([a-zA-Z])\B</p><p id="e004339b-83b8-4119-996f-98437b51691d" class="">R</p><p id="f6e3b116-0d2c-4f5b-bc7c-ec274f9116e3" class="">.$</p><p id="46aa8b3c-efe9-41be-b7e0-8c5e6cdcc325" class="">
+</p><p id="6b7ca22c-7cc4-43e8-8f6a-713f28919dac" class="">V. Group &amp; Lookaround</p><p id="31530601-4d62-4c6c-a3a0-e46879de1da0" class="">+(abc)</p><p id="ca98b0c4-38e0-4997-b9b5-025529f1498b" class="">+(number)</p><p id="a50e20b3-eb29-4b5c-8b70-0b7350295367" class="">+(?=abc)a</p><p id="7847be56-3006-458f-8614-079a437de9dd" class="">+(?abc)a</p><p id="fc54c912-4377-48aa-807b-0c33767dd489" class="">
+</p><p id="f7d7b0a0-5b81-4a18-9922-5c1dc8f697fc" class="">+\d(?=px) |  \d(?!px)</p><p id="032141b0-5596-4490-a496-83f23ca98f2c" class="">
+</p><ul id="494ff7ff-5119-4ab8-8aa6-1ec6a482ad5c" class="bulleted-list"><li>Expression flag</li></ul><p id="39effe63-0e4c-427b-82de-43f4f1d06edb" class=""> - global, case insensitive (ko phân biệt hoa thường)</p><p id="68df4a99-eb4c-41d3-a860-3fc821598975" class="">
+</p><ul id="897bb692-65ff-4413-a50d-8ff18a29005b" class="bulleted-list"><li>col(ou)?r</li></ul><p id="5b58a943-536f-4ba2-bb82-ea0b4453a4bc" class="">⇒ có cả 2 or ko có gì cả (ou)</p></div></article></body></html>

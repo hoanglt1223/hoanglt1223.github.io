@@ -1,0 +1,672 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Day 29 - MVC Architect</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="c20edd42-28f1-45d5-bfc7-e552c10f870a" class="page sans"><header><h1 class="page-title">Day 29 - MVC Architect</h1></header><div class="page-body"><h2 id="9a476ff1-df74-45e0-bb58-a724ae9093cf" class="">Note: MVC Ko phải là 1 cái cụ thể mà là 1 Philosophy</h2><p id="11f817a8-fb93-448f-a1b4-b5db598185c3" class="">⇒ Ánh sáng của đảng =))</p><h1 id="ceb20e7b-4d53-45c3-a384-63f80166aea1" class="">                 <mark class="highlight-red"><strong>MVC - Model-View-Controller</strong></mark></h1><h3 id="7a2f1498-e584-4e2a-9dbf-a99760f75536" class="">View ⇒ HTML, JS</h3><ul id="82e147cf-e921-4f0c-9898-632f21b44021" class="bulleted-list"><li>VD: Convert HTML ⇒ PDF xong trả về frontend (làm trên server)</li></ul><ul id="876ebdf0-6d34-4914-9863-2fba959264b5" class="bulleted-list"><li>SEO: Search Engine Optimization ⇒ dùng Server Side Rendering (SSR) : khi gọi file html thì đã có nội dung trong file sẵn rồi. VD: Settings, account, etc của FB</li></ul><ul id="472118d1-afdc-4468-a1cb-abd45a369b21" class="bulleted-list"><li>Hiện tại đang dùng Client Side Rendering (CSR) : khi mở http file lên xong file http gọi api rồi mới load nội dung lên http. VD: Newsfeed FB</li></ul><ul id="be2c60d5-f0d0-4af0-9ed6-1e7ef8dfe61d" class="bulleted-list"><li>Việc quyết định khi nào dùng cái gì sẽ do Architect làm
+</li></ul><ul id="438a0c73-68c0-4bd8-a0b8-6489bd2744b9" class="bulleted-list"><li>Sự khác biệt giữa <strong>server-side rendering</strong> và <strong>client-side rendering</strong></li></ul><figure id="720cc6e0-7d7f-4df0-8755-d8b14f0f5e27"><a href="https://toidicodedao.com/2018/09/11/su-khac-biet-giua-server-side-rendering-va-client-side-rendering/" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">Sự khác biệt giữa server-side rendering và client-side rendering</div><div class="bookmark-description">Trong series Lược Sử Lập Trình Web, mình đã kể về chuyện lập trình web đang có xu hướng chuyển dần từ server-side rendering sang client-side rendering. Trong bài này, chúng ta sẽ cùng tìm hiểu về sự khác nhau giữa hai cơ chế này, ưu nhược điểm của chúng để có thể dễ dàng...</div></div><div class="bookmark-href"><img src="https://secure.gravatar.com/blavatar/54084bfa40206518fb9e01fb53c7ccd9?s=32" class="icon bookmark-icon"/>https://toidicodedao.com/2018/09/11/su-khac-biet-giua-server-side-rendering-va-client-side-rendering/</div></div><img src="https://toidicodedao.files.wordpress.com/2018/08/ssr-vs-csr.png?fit=440%2C330" class="bookmark-image"/></a></figure><p id="1a2fc020-77ce-4c0c-b5ac-b9b8e805df54" class="">
+</p><h2 id="1a7fdec3-d7e6-44a3-9395-8d6be29510cf" class="">Model  </h2><pre id="d60dffd7-312b-4a5b-a9a3-19c9bdc4a392" class="code"><code>⇒ VD: 
+const task = {
+    id: {
+        type: &#x27;number&#x27;,
+        required: true
+    },
+    taskName: {
+        type: &#x27;string&#x27;,
+        required: true,
+        unique: true
+    },
+    isDone: {
+        type: &#x27;string&#x27;,
+        required: false
+    },
+    owner: {
+        type: &#x27;number&#x27;,
+        required: true
+    },
+}
+</code></pre><p id="20d305f4-f333-46aa-b6d8-c12a7ddd0470" class="">⇒ cấu trúc cơ sở dữ liệu</p><p id="7b8e0eb5-afd2-4750-b65e-faa0e945d481" class="">VD: validate (data,model) trả về status code: 400</p><p id="1ee50c75-7914-4569-80d9-33d732861cb0" class="">⇒ check xem có đủ field yêu cầu hay ko</p><ul id="2516d1f0-3627-4374-bf92-7ca9fe85b618" class="bulleted-list"><li>Relation: Định nghĩa mối quan hệ giữa các model
+</li></ul><p id="5fff54fa-38ee-4ed1-b156-6dc046d910c9" class="">
+</p><pre id="0e011cdd-deea-4e26-a017-b89218d6b1b2" class="code"><code>⇒ VD: 
+const productModel = {
+	name
+	password
+}
+const productHasDisplayIDModel {
+	displayID
+	name
+	password
+}
+=&gt;  productHasDisplayIDModel la` DTO</code></pre><p id="44ba5e68-b820-492d-ad94-f214bd6d3abd" class="">
+</p><p id="50141c4e-9435-49af-8cff-9d750a4e364b" class="">⇒ DTO (Data Tranfer Object) : dùng để validate trc khi truyền dữ liệu từ chỗ này sang chỗ khác</p><ul id="1d0bcb11-f91b-4eac-abdb-b99080f2e951" class="bulleted-list"><li>Projection DTO: validate dữ liệu trả về trc khi truyền dữ liệu từ chỗ này sang chỗ khác (khi muốn loại bỏ 1 số property trc khi trả về) </li></ul><p id="d4c1ecf1-fc34-4354-8e07-843d344d7ce4" class="">⇒ đảm bảo ko chứa những thông tin ko cần thiết ⇒ đảm bảo về bảo mật
+</p><h1 id="d6be212b-5519-4522-98e2-466fb7ee7813" class="">View ⇒ Request ⇒ <code><mark class="highlight-orange_background">Router</mark></code><mark class="highlight-orange_background"> ⇒ (</mark><code><mark class="highlight-orange_background">Interceptor</mark></code><mark class="highlight-orange_background">) ⇒ </mark><code><mark class="highlight-orange_background">Controller</mark></code><mark class="highlight-orange_background">  ⇒ </mark>Response ⇒ View<mark class="highlight-orange_background">
+⇒ </mark><code><mark class="highlight-orange_background">Repository</mark></code><mark class="highlight-orange_background"> ⇒</mark><code><mark class="highlight-orange_background">DataSource</mark></code><mark class="highlight-orange_background">⇔ </mark><code><mark class="highlight-orange_background">Database</mark></code></h1><ul id="4ff747f0-dabc-4d68-8a3b-1a5d4765990d" class="bulleted-list"><li>Note: Ko có <code>Repositoy</code>và <code>DataSource</code> thì nếu có việc vd như muốn switch qua DynamoDB phải đập làm lại</li></ul><ul id="779be21c-61e1-422d-9ce9-3c0be263ccbc" class="bulleted-list"><li>Từ <code>Repo</code>⇒ <code>DataSource</code>phải tuân theo Dependency Injection (sau này nói)</li></ul><h2 id="4d0f64c4-d60e-4149-8168-6a41036d9e4b" class=""><code>Router</code>(bộ định tuyến)</h2><p id="fbaf18d2-0034-4a55-86e5-96c099891303" class=""><strong>Xử lý request, URL,... để trỏ đến đúng </strong><code><strong>Controller</strong></code><strong>và </strong><code><strong>middlewares</strong></code><strong>(nếu có). </strong>Nếu không có controller khả dụng thì thông báo không có.
+Cách dùng: <strong>Khai báo routes là mảng gồm pathname, method,.. tên controller rồi viết hàm xử lý</strong> request, URL gọi controller/middlewares hoặc dùng switch case if else 
+</p><ul id="f1a5b1b3-435d-40fe-87e1-f2cbd68953dc" class="bulleted-list"><li><em>VD: Kiếm ko đc router ⇒ Status code 404</em></li></ul><ul id="8410eb7b-ae02-4774-bdd3-2a4b457f0360" class="bulleted-list"><li><em>VD: ko vào tới đc server ⇒ Status code 502</em></li></ul><h2 id="357c86b0-ef4e-4751-8d83-8f23957e7d93" class=""><code>Interceptor</code></h2><p id="5128cc97-c2e3-4646-9678-7e6517d58888" class=""><strong>Những hàm được chạy trước </strong><strong><code>Controller</code></strong><strong>, thường là: xử lý validate, authenticate, authorize hoặc ghi log trc khi request được truyền tới </strong><strong><code>Controller</code></strong></p><p id="1f99a143-e078-48bc-b689-b76a63a9b36e" class=""><em>
+var a = &quot;function x() {console.log(&#x27;abc&#x27;)};x()&quot;
+eval(a)</em></p><p id="c3b8bbc5-cd6f-41b4-b18e-5958cc2ed52b" class=""><em>⇒ nguy hiểm</em></p><h2 id="14193089-bbb7-41ea-9fe0-7cee9373a6c8" class=""><code>Controller</code></h2><p id="06bb524e-53e5-4b28-a294-0c55a03dc5b5" class="">Xử lý chính,<strong> nhận </strong><em><strong>request </strong></em><strong>được điều hướng từ router rồi gọi </strong><strong><code>Repository</code></strong><strong> xử lý xong thì </strong><em><strong>response</strong></em></p><p id="000bcabe-3e13-470a-a626-87c6a08adb1f" class="">Cách dùng: <strong>index chứa các hàm(API) của project. Xử lý </strong><em><strong>request </strong></em><strong>và gọi các hàm con ở helper.js để giao tiếp với Repository thực hiện chức năng rồi trả kết quả về </strong><em><strong>response</strong></em></p><h2 id="4abff45d-cc34-454b-9cd3-0ad5c866122d" class=""><code>Repository</code></h2><p id="fc16fd47-83bd-41d0-adcc-4f82a3acdaf9" class=""><strong>Nhận các yêu cầu từ </strong><code><strong>Controller</strong></code><strong>rồi gọi </strong><code><strong>DataSource</strong></code><strong> để đọc/ghi và xử lý dữ liệu</strong></p><p id="a6443c43-c6e6-477c-b5f7-288a98054dee" class=""><strong>Không thực hiện trực tiếp đọc ghi database mà chỉ gọi </strong><strong><code>DataSource</code></strong><strong> làm.</strong> Khi cần đổi <code>database</code> thì chỉ cần viết lại <code>DataSource</code> bằng cú pháp tương ứng với <code>database</code> mới, giữ nguyên tên hàm nên không phải sửa lại cả Project</p><p id="204e0297-e82f-4bfa-9d7c-2b7e456fcf99" class=""><strong>1 object nhận giá trị</strong><strong><code>tên Table</code></strong><strong> của CSDL và </strong><strong><code>Model</code></strong><strong> và có các phương thức chính giao tiếp với </strong><strong><code>DataSource</code></strong><strong>để xử lý</strong></p><p id="3a851c58-082e-450a-a0e8-041ad541028b" class=""><em> createuser, deleteuser, filteruser, update</em></p><ul id="710c4bf7-9d6d-4a93-993c-152d10dd66c8" class="bulleted-list"><li>POST /sign-up →router→controller(index→helper)-&gt; Repository (validate(data,model) -&gt; createUser(data)</li></ul><p id="04964614-a8b4-408c-8213-9026887b55ae" class="">
+</p><h2 id="433da7c5-1a1e-4fa5-8376-924f8277df12" class=""><code>DataSource</code></h2><p id="6e4f348b-ddf6-4cfd-beed-6c6550bf7439" class=""><strong>Chứa các phương thức truy cập Database chính như (Đọc, Ghi) </strong>phù hợp với <code>database</code>được dùng
+Khi cần đổi <code>database</code> thì chỉ cần thay đổi cú pháp đọc ghi tương ứng với <code>database </code>mới</p><p id="73e16d1c-2a8c-4422-8f7c-fce29d9648c6" class="">
+</p><ul id="6a6b89e9-b10a-4839-9433-7e1c246d3e6b" class="bulleted-list"><li><em>để xác định được đang sử dụng database nào</em></li></ul><ul id="755b3041-cb99-4444-8574-2094e4117bac" class="bulleted-list"><li><em>Multitenant: nhiều cty và mỗi cty có 1 database riêng nhưng có chung 1 cấu trúc (VD: discord, slack, workplace, social network) ⇒ khó code nhưng nếu cần thì vẫn phải làm</em></li></ul><ul id="ed1d615e-de16-431e-829b-9e997a2812b9" class="bulleted-list"><li><em>Dùng lúc nào sẽ do Architect quyết định</em></li></ul><ul id="c68c3621-3bc6-430c-b50a-cd51135f26d7" class="bulleted-list"><li><em>Microservice: chia nhỏ app thành nhiều khối, mỗi khối làm 1 tác vụ riêng và là 1 cái nodejs riêng (máy riêng)</em></li></ul><ul id="7214f704-9288-4a85-9615-5b9885fccba5" class="bulleted-list"><li><em>Ngoài lề: IoT hay dùng DynamoDB ⇒ gửi nhận liên tục ko vấn đề gì</em></li></ul><h1 id="55c98b4f-50e8-4b78-800b-91527b413cfe" class="">                                 <mark class="highlight-red">Architect</mark></h1><ul id="44a7c1d3-1b27-49e3-842d-4b3147b4cb77" class="bulleted-list"><li>Architect: Vị trí cao nhất trong mảng kĩ thuật. Kinh nghiệm làm việc ko dưới 6, 7 năm</li></ul><ul id="ef263668-9978-4366-80a3-473869664994" class="bulleted-list"><li>Cty ko đủ ng sẽ kiêm 2 vị trí: <strong>Technical/ Solution Architect </strong> ⇒ gọi chung là Archiect</li></ul><ul id="6187c38e-f27b-4d87-8656-4883326d56f9" class="bulleted-list"><li>Biểu hiện: nói nhiều làm ít nhưng những cái họ làm rất quan trọng/ ảnh hưởng rất lớn cho dự án</li></ul><p id="d1260c7e-75e3-48de-8429-bac0238f51a6" class="">
+</p></div></article></body></html>

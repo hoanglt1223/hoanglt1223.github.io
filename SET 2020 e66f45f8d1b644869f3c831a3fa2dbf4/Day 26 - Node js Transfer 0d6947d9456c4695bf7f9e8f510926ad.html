@@ -1,0 +1,649 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Day 26 - Node.js: Transfer</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="0d6947d9-456c-4695-bf7f-9e8f510926ad" class="page sans"><header><h1 class="page-title">Day 26 - Node.js: Transfer</h1></header><div class="page-body"><h2 id="7496ad4b-9dc0-42bd-9018-b79bf5635c09" class="">I. NodeJS (single thread)</h2><ol id="e93f4f9f-96cd-4d55-8c1d-9e27cf84b054" class="numbered-list" start="1"><li>Create Server
++ Server port: 1 ⇒ 65536 (2^16) ⇒ port an toàn thường là trên 2500 vì &lt;2500 thường là port hệ thống
++ 80: HTTP ⇒ 8080 (mimic khi code)
++ 443: HTTPS ⇒ 4433
++ 22: SSH (99.99% thường bị đóng)
++ 7777: PHP
+- VD: youtube.com:80
+</li></ol><ol id="da95dff7-4e07-4bdc-90f0-25ef48fd3316" class="numbered-list" start="2"><li>
+- nodeJS chạy dưới dạng event loop</li></ol><ul id="2c526a77-d98b-45c0-b0e3-8759d2cbc051" class="toggle"><li><details open=""><summary>Các bước handle</summary><ol id="6ca87990-2b42-4749-8c6e-7cb272b7ee95" class="numbered-list" start="1"><li>Setup HTTP server</li></ol><ol id="7aebf664-c57e-4aad-a156-0b3069cf26f4" class="numbered-list" start="2"><li>Nhận dạng request</li></ol><ol id="38c0eedf-293b-47bf-a03d-adf669f3b9b3" class="numbered-list" start="3"><li>Xử lý request
+3.1 Xử lý lỗi</li></ol><ol id="195cb099-c029-41e4-b814-4f7e933f9fb3" class="numbered-list" start="4"><li>Đóng gói thông tin</li></ol><ol id="6973dbb3-a61f-4a2f-a46e-403efba0a2e9" class="numbered-list" start="5"><li>Respose</li></ol><ul id="9d1a9f4c-bdc0-480b-8e3c-f3b1a3a5aebd" class="bulleted-list"><li>Note: sau này framework sẽ làm bước 1 + 5</li></ul></details></li></ul><ul id="c83c44e7-a6b1-43c7-bbbf-bb7543cf2240" class="bulleted-list"><li>Tự mở localhost:8080</li></ul><ul id="cefad0fc-f31e-4e27-a5dc-4d56ea822917" class="bulleted-list"><li>Control + C để ngắt terminal</li></ul><p id="0832b444-1421-491a-927c-851d903530a4" class="">
+</p><p id="d99f4f1c-a2eb-4b4d-a2e1-883d30aba2e1" class="">3. </p><p id="8a6ef13d-5ad5-46e1-a78b-1ca8bb15053d" class=""> - khi gửi thông tin sẽ chia nhỏ thành nhiều phần, mỗi phần gọi là 1 chunk</p><p id="5c68feda-f832-4d91-acbe-84bb143e3b04" class=""> - khi thông tin đi qua chưa đc sắp xếp đúng sẽ đc lưu vào 1 chỗ tạm gọi là buffer</p><p id="71bf7dc5-5010-4f54-a53f-beaa32b5d14b" class=""> - nodeJS sẽ tự check xem gửi có đủ hay chưa</p><p id="cab9af38-62de-4e45-8584-d5f0dbe11697" class="">
+</p><h2 id="a6a78893-5aeb-4311-bfb6-7ccfac2ec7f3" class="">II. Gom chunk</h2><ol id="5a914cbb-c97c-4e5e-8180-d7a05f6103c0" class="numbered-list" start="1"><li>Tạo 1 array chứa nó
+<mark class="highlight-red">- const chunks = []</mark></li></ol><ol id="e9870024-66b8-48e2-825d-33e5b12da7dd" class="numbered-list" start="2"><li>Đưa chunks vào Buffer xử lý khi &quot;end&quot;</li></ol><ol id="30710070-499e-4225-b0c6-575f8d90a1c6" class="numbered-list" start="3"><li>Dùng body Data của Buffer trả về</li></ol><ol id="36ccb161-896b-46ee-9e6e-05aee12fa998" class="numbered-list" start="4"><li>Xử lý trong trường hợp lỗi &quot;error&quot;</li></ol><p id="653002b0-20d7-43d8-a361-5ad3ae28e22c" class="">
+</p><p id="7366fef4-fa99-4bb9-af3e-0e3598162aad" class="">
+</p><p id="13e53cee-4de5-4e6c-9173-3c46ae4290fe" class="">
+</p><h2 id="17ed4c69-32c3-456e-a507-3ea002f8b855" class="">Event Loop</h2><p id="2164aa97-09b9-4108-b553-5d340b639578" class="">
+</p><ol id="7e70d3f0-d1c6-46c0-9cfa-6244a492d78b" class="numbered-list" start="1"><li><strong>Setup HTTP Server</strong></li></ol><ol id="a1769831-48a6-44d5-abe3-9effc4a5200a" class="numbered-list" start="2"><li><strong>Nhận dạng Request (Mỗi 1 cái Request sẽ có 1 cách xử lý riêng ! Nên cần phải được nhận dạng trước)</strong></li></ol><ol id="e2582454-3bf8-446a-ae4c-8b152531df03" class="numbered-list" start="3"><li><strong>Xử lý Request </strong><p id="25264ba1-8bf3-4d6d-acb8-5dfdc4c578b0" class="">3.1 : Xử lý lỗi </p></li></ol><ol id="a4cb3769-b6d1-433f-b96a-146c117a773d" class="numbered-list" start="4"><li><strong>Đóng gói thông tin</strong></li></ol><ol id="55e62ee7-2080-4175-9563-2043f8c2ac43" class="numbered-list" start="5"><li><strong>Response về </strong></li></ol><p id="4cfbf0a8-9068-4385-bc62-93dc76b49683" class="">
+</p><p id="4af42a6b-1726-4888-a1eb-df9cb6782438" class="">80% thời gian sẽ dùng để làm bước 2, 3, 3.1, 4</p><p id="653cbc8e-e377-4511-89a2-3343ebc6d35b" class="">
+</p><p id="f8fb5a32-fb8c-48c2-abb4-dccfc6ac2aef" class="">frame</p><p id="e88892b2-d186-4c02-94b0-930a2143572f" class="">chunk</p><p id="cc5aa341-c5c2-4bf2-8f22-ad74e4a8378d" class="">buffer: chỗ lưu trữ tạm thời để lưu thông tin khi request </p><p id="230ea819-c876-413e-9e6e-9504f129a106" class="">Kiến trúc máy tính</p><p id="ce830de1-fc31-4c38-bc10-d8648fd9e359" class="">checksum: Đảm bảo dữ liệu vẫn còn toàn vẹn thông tin, nhưng không check chi tiết ở bên trong xem có chính xác hay không</p><p id="53a11a66-3098-41bf-bcd3-6588210ad177" class="">
+</p><p id="e0b21ea7-c97a-4b37-a98e-1a8306f3ed75" class=""><strong><mark class="highlight-yellow">Event loop</mark></strong></p><p id="178116fc-3bf6-4678-a331-01f6c0d5fd77" class="">1. Gom chunk khi<mark class="highlight-yellow"> </mark><mark class="highlight-yellow"><strong>&quot;data&quot;</strong></mark> → Kiểu dữ liệu phù hợp nhất : Array</p><p id="cd2aa5bc-178e-42df-aad9-a7d5c88c5363" class="">const chunks = []</p><p id="83f63c9a-354f-4240-8d77-947acaebbb1d" class="">2. Đưa cái chunk vào buffer khi <strong><mark class="highlight-yellow">&quot;end&quot;</mark></strong> (khi nào đủ thì mới đưa)</p><p id="b5ef1530-698b-48cd-8d62-124737abcb36" class="">3. Dùng body Data của buffer trả về</p><p id="a760973a-1fdb-4cf8-ad5a-a9611a8f8883" class="">4. Xử lý trong trường hợp lỗi → Có 1 sự kiện xảy ra là <strong><mark class="highlight-yellow">&quot;Error&quot;</mark></strong></p><p id="7ebfe4d3-feb0-4dd3-86b7-6ce3fe8cfbf6" class="">⇒ Có 3 cái sự kiện chính  </p><p id="eab161da-19a6-4049-86c1-05adbfe16eba" class="">
+</p><p id="b27ff129-846b-4362-8323-6eefa4dac701" class="">
+</p><p id="3989d260-fd4f-4ac9-a36e-3f4b8d625c85" class=""><strong><mark class="highlight-red">BTVN: </mark></strong></p><p id="c84ecb64-8167-4127-8338-719047cdce49" class=""><strong>Viết 1 server xử lý các yêu cầu:</strong></p><ol id="e8ebf1dc-c6d7-4172-a9fc-14f8aa75f53f" class="numbered-list" start="1"><li>Gửi GET /sum =&gt; response về client tổng các số trong các input files.</li></ol><ol id="6601b67e-4195-438f-9091-33e23c30c711" class="numbered-list" start="2"><li>Gửi POST /power với body = { powerFactor: x } =&gt; response về kết quả lũy thừa bậc x của bài 1.</li></ol><ol id="45fbeac3-4a3b-4dbf-8ed4-606364b12aa0" class="numbered-list" start="3"><li>Gửi GET /output?powerFactor=x =&gt; Trả FILE output chứa kết quả của bài 2. Ở đây output là buffer</li></ol><p id="72f02854-630b-43a3-9ddf-75657aed7b4e" class="">
+</p></div></article></body></html>

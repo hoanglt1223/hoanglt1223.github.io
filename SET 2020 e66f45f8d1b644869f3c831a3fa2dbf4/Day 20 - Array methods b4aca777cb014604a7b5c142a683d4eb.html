@@ -1,0 +1,688 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Day 20 - Array methods</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="b4aca777-cb01-4604-a7b5-c142a683d4eb" class="page sans"><header><h1 class="page-title">Day 20 - Array methods</h1></header><div class="page-body"><p id="25fd209f-6c25-41c3-9635-34790b710690" class="">
+</p><figure id="d4a04fbb-2cb8-4f67-8fa5-226ce3a8971d" class="image"><a href="Day%2020%20-%20Array%20methods%20b4aca777cb014604a7b5c142a683d4eb/Untitled.png"><img style="width:1174px" src="Day%2020%20-%20Array%20methods%20b4aca777cb014604a7b5c142a683d4eb/Untitled.png"/></a></figure><p id="dcbed3e2-9258-4c07-83b5-6a541d59aa00" class="">vd: item nhân 2</p><p id="b92e126f-c7e5-4843-99c4-b6461f3d387f" class="">var a = [1,2,3,4,5,6]
+var b = a.map(item =&gt; item * 2)
+console.log(b)</p><p id="ce0b4fe6-9f1a-48af-b0ca-2116743f9dd2" class="">
+</p><p id="67890ebb-6169-4f0e-803b-b8f8ea6de2ef" class="">
+</p><figure id="735f7a8d-5029-46c4-a64c-e92f29efae88" class="image"><a href="Day%2020%20-%20Array%20methods%20b4aca777cb014604a7b5c142a683d4eb/Untitled%201.png"><img style="width:1108px" src="Day%2020%20-%20Array%20methods%20b4aca777cb014604a7b5c142a683d4eb/Untitled%201.png"/></a></figure><p id="ca30fd94-ad4f-43f5-b2ca-cac944dd5f0d" class="">Vd: bỏ hết số lẻ</p><p id="6d5dbd44-263e-4105-99d2-f6b9d8dbaef0" class="">var a = [1,2,3,4,5,6]
+var b = a.filter(item =&gt; item % 2 == 0)
+console.log(b)</p><p id="0c18c9f3-3d61-41a6-b35c-a052a4e37d4f" class="">
+</p><p id="826cb6be-4fd1-4ff8-b718-fc21719ecb54" class="">
+</p><p id="488e5d27-5daa-4a1d-ade4-633e06ac5781" class="">Check thoả điều kiện: checkSome. Thoả trả true, k trả false</p><p id="70f42d5f-ac24-4c42-b03e-6c0f39505995" class="">
+</p><figure id="24a19a68-89ca-47fb-bef1-11a51aa35739" class="image"><a href="Day%2020%20-%20Array%20methods%20b4aca777cb014604a7b5c142a683d4eb/Untitled%202.png"><img style="width:1124px" src="Day%2020%20-%20Array%20methods%20b4aca777cb014604a7b5c142a683d4eb/Untitled%202.png"/></a></figure><p id="701a6d67-550a-4076-b348-3c3544bab7db" class="">
+</p><p id="25774b16-3fa3-48d0-a298-288ff1aa687d" class="">
+</p><p id="11f323ed-743d-4d15-af8b-c932384f704b" class="">
+</p><pre id="8231a8b6-f7a4-418d-bd68-56a5bee90aa9" class="code"><code>var a = [1,2,3,4,5,6]
+var b = a.map(item =&gt; item * 2)
+console.log(b)
+var c = a.filter(item =&gt; item % 2)
+console.log(c)
+var d = a.every(item =&gt; Number.isInteger(item))</code></pre><p id="602ae65a-c3e3-454c-a77f-53b1887e1b60" class="">
+</p><figure id="d896a07a-95ea-4d21-b2c6-21a66f8e8740" class="image"><a href="Day%2020%20-%20Array%20methods%20b4aca777cb014604a7b5c142a683d4eb/Untitled%203.png"><img style="width:413px" src="Day%2020%20-%20Array%20methods%20b4aca777cb014604a7b5c142a683d4eb/Untitled%203.png"/></a></figure><p id="1ded6f0a-02ef-44eb-8a26-4fa7e195bdfb" class="">
+</p><p id="3faa6204-1653-49f6-995f-fba9914b701e" class="">check every ktra xem phần tử có phải number hay k</p><p id="df37d3fc-2e24-49df-a648-790933bb5570" class="">
+</p><p id="e5b86ea6-ccf0-4da4-b20a-84e2f3961950" class="">const num = [1,2,3,4,5,6,&#x27;b&#x27;]
+const result = num.every(item =&gt; Number.isInteger(item))
+console.log(result)</p><p id="e3d3c323-6015-44d7-8b3e-7ede4370acec" class="">
+</p><p id="be7ecd27-7b85-4c3f-a813-7156ee6ce801" class="">
+</p><p id="5276a3df-db46-4ef9-a85f-78e39fc2a085" class="">vd: Check id và pass xem có match hay ko</p><p id="ca7b4d4a-014f-41ef-bfde-edfea52d643b" class="">
+</p><pre id="b25c771a-be1c-48a3-a27f-7346e0cf4468" class="code"><code>var users = [{username: &#x27;minh1&#x27;,password: &#x27;1234&#x27;}, {username:&#x27;minh2&#x27;,password:&#x27;6789&#x27;}]
+var username = prompt (&quot;Input your username:&quot;)
+var password = prompt (&quot;Input your password:&quot;)</code></pre><pre id="dc6e84f3-dc7d-4ddd-b912-c59623c3be41" class="code"><code>var match = users.some(item =&gt; item.username == username &amp;&amp; item.password == password)
+console.log(match)</code></pre><p id="80e63023-e1ee-4925-8855-0ff8f2afd001" class="">
+</p><p id="95348cac-2d11-4e6f-a21d-31f99d293f29" class="">Note: every ⇒ chỉ cần 1 vòng lặp false thì tất cả sẽ là false</p><p id="8805083d-7620-4961-b8a7-42fb10c2eba6" class="">some ⇒ chỉ cần 1 vài true thì kq cuối cùng sẽ là true</p><p id="2d8c9338-0b58-42fc-9ff2-674e74b35e03" class="">
+</p><p id="12e2d2c4-f694-4d17-8866-739bdb9fd3c0" class="">vd: check xem có trùng id và pass hay k</p><p id="9613311d-3c5c-4f73-9ba1-8be161cff257" class="">
+</p><pre id="a9c23a3a-4b70-4064-968a-2b4370b1b899" class="code"><code>var users = [{username: &#x27;minh1&#x27;,password: &#x27;1234&#x27;}, {username:&#x27;minh2&#x27;,password:&#x27;6789&#x27;}]
+var username = prompt (&quot;Input your username:&quot;)
+var password = prompt (&quot;Input your password:&quot;)</code></pre><pre id="8ed5f5aa-3406-4a1b-ac96-b80aed335d3a" class="code"><code>var newUsername = prompt (&quot;Input your username:&quot;)
+var newPassword = prompt (&quot;Input your password:&quot;)</code></pre><pre id="077c6d8b-9399-4a3b-ae3a-55992ca67a36" class="code"><code>var exist = users.every(item =&gt; item.username != username &amp;&amp; item.password != password)
+if(exist){
+alert(&#x27;add succesfully&#x27;)
+}else{
+alert(&#x27;account already exist&#x27;)
+}
+console.log(users)</code></pre><p id="da33050d-9a1a-4d7e-9fc8-1999cb9d9fb2" class="">
+</p><p id="3f358623-9034-45f7-9d9e-f63b00d92faa" class="">vd: tính tổng</p><figure id="6ff962eb-d82f-4896-9389-d37795b7eb6e" class="image"><a href="Day%2020%20-%20Array%20methods%20b4aca777cb014604a7b5c142a683d4eb/Untitled%204.png"><img style="width:1124px" src="Day%2020%20-%20Array%20methods%20b4aca777cb014604a7b5c142a683d4eb/Untitled%204.png"/></a></figure><p id="43022379-395f-43d3-bd54-00a9a332a26e" class="">
+</p><figure id="00689b5c-66e7-4ce6-a732-d8065c0e2ba6" class="image"><a href="Day%2020%20-%20Array%20methods%20b4aca777cb014604a7b5c142a683d4eb/Untitled%205.png"><img style="width:1118px" src="Day%2020%20-%20Array%20methods%20b4aca777cb014604a7b5c142a683d4eb/Untitled%205.png"/></a></figure><p id="bb177aa0-9867-4f85-9953-98020dca8bca" class="">
+</p><figure id="d6b687c8-16a5-4122-b5ca-7e39ba62ecca" class="image"><a href="Day%2020%20-%20Array%20methods%20b4aca777cb014604a7b5c142a683d4eb/Untitled%206.png"><img style="width:1118px" src="Day%2020%20-%20Array%20methods%20b4aca777cb014604a7b5c142a683d4eb/Untitled%206.png"/></a></figure><p id="7472eaf8-1999-46e9-a309-bc7f051e1a87" class="">parameter t2 là index, ở đây là t3</p><p id="26b82267-a1a2-4e28-902d-14103c27ed39" class="">t3 là arr,ở đây t4</p><p id="18341215-d412-4e16-a8d1-028abe7232e5" class="">⇒ ít khi dùng</p><p id="0b94e0fa-fb4c-40e2-85c3-a3c48961a9bf" class="">
+</p><p id="635bac55-fe0d-4112-b013-784967e97bed" class="">
+</p><p id="e20b4d61-13df-4253-be9a-4e0bf01fa54f" class="">Vd: tạo array có các kí tự tên có thể bị lặp lại [&quot;dang&quot;,&quot;anh&quot;,&quot;phong&quot;,&quot;dang&quot;,&quot;thinh&quot;,&quot;phong]</p><p id="f5587fd5-8afa-486f-a28a-e0ee945fa89d" class="">dùng hàm reduce trả về object trong đó</p><p id="89591149-ea55-4db2-bd97-b3cc66964f9f" class="">{</p><p id="23ff0647-9363-4a16-bdc0-7861c9cd3661" class="">&quot;dang&quot;: 2</p><p id="7ee1ce3c-9491-4433-ba23-7c5bcf85b65a" class="">&quot;phong&quot;: 2</p><p id="183d93e6-3179-4e26-8d94-e86452982329" class="">&quot;anh&quot;: 1</p><p id="f5eae426-ee6f-4952-9d6b-19675404ae87" class="">&quot;thinh&quot;:1</p><p id="9483be70-623c-4265-ba73-de51babcbe7b" class="">}</p><ul id="9655be69-7bd9-4666-a55e-365765b714f6" class="bulleted-list"><li>code mạng</li></ul><pre id="f211745a-270b-4ce2-ae5b-5817b6d4080d" class="code"><code>var arr = [&quot;Dang&quot;, &quot;Anh&quot;, &quot;Phong&quot;, &quot;Dang&quot;, &quot;Thinh&quot;,&quot;Phong&quot;]</code></pre><pre id="3adfdffc-cf07-4201-88f9-43bdd12e4a90" class="code"><code>var map = arr.reduce(function(obj,b){
+obj[b] = ++obj[b] || 1; //1 là giá trị default
+return obj;
+}, {});
+console.log(map)</code></pre><p id="17298186-828a-451a-b04b-6345fa230f3d" class="">
+</p><ul id="a4006538-3ebf-4dd3-aa4d-de77ee950bcd" class="bulleted-list"><li>code fix</li></ul><pre id="9cea2c79-1c7e-47fb-ada7-5e05c9902490" class="code"><code>var arr = [&quot;Dang&quot;, &quot;Anh&quot;, &quot;Phong&quot;, &quot;Dang&quot;, &quot;Thinh&quot;,&quot;Phong&quot;]</code></pre><pre id="2522caa4-e808-42ad-9775-075a0e8d0706" class="code"><code>var result = arr.reduce((acc, cur)=&gt;{
+acc[cur] = ++acc[cur] || 1;
+return acc;
+}, {});
+console.log(result)</code></pre><ul id="926391a7-8e89-4765-9877-ffb051a7dc51" class="bulleted-list"><li>reduce nhận 2 parameter </li></ul><p id="cd6cdcb4-7e98-4ad4-b502-8e79543f6ff0" class=""> - giá trị tích luỹ, giá trị hiện tại</p><ul id="ac481e4b-60ef-4bcc-8b22-1ed5f030a29c" class="bulleted-list"><li>3 cách gắn property</li></ul><p id="72525f38-3bf9-4472-a106-8aa5cba9d8c2" class="">obj= { }</p><p id="0ee46ce5-5554-4e30-b0ba-12800b3a67e4" class="">obj.prop = 3</p><p id="a96c064a-8680-4a58-9c65-90391c7ade87" class="">obj [&quot;prop&quot;] = 3</p><p id="a0c0ee47-5c0b-4a4b-b9fc-5e8fd3c61db7" class="">
+</p><p id="1304f6f7-420c-41ae-9b54-59bc2b2a9e65" class="">obj [ arr[i] ]</p><p id="14d03e67-0b7a-4ecf-86d7-9f13bfcb779a" class="">obj [ &quot;Dang&quot; ]</p><p id="e90e7b9a-21c3-4997-91be-6d6c168aa3af" class="">⇒ obj.Dang</p><p id="a1139a63-2cd5-404a-86ce-45185e2e461d" class="">
+</p><h2 id="888b4602-040f-43ba-b3fa-efcdc4b83623" class="block-color-red">Declarative Programming</h2><p id="423aec5c-0316-4aa7-8d01-534bc7226fd8" class="">map ⇒ trả về 1 array mới ứng call back</p><p id="1cd8d677-edea-47f8-9ee6-194ae5a1da4a" class="">+note: tất cả các hàm sau đây đều trả về 1 mảng mới</p><ul id="c9c7a2e9-2757-49bb-a9f7-672d05bc9c6a" class="bulleted-list"><li>1 số hàm</li></ul><p id="dd8b5f4a-c8bd-4de3-9bb9-a36d93909a21" class=""> - filter</p><p id="24a82fc8-30af-4ce3-b9b2-74626c279c99" class=""> - some</p><p id="b7294790-3533-4c88-b60f-0e0a4c3ab382" class=""> - every</p><p id="987c5ba9-43aa-4496-b16a-bcde04c7e611" class=""> - reduce
+</p><ul id="9485d7a9-33f4-4469-9034-184732b1c949" class="bulleted-list"><li>1 số hàm khác</li></ul><p id="04a15f58-05a0-4173-8081-7ed0cc7d8ebc" class=""> - sort: nhận 2 giá trị trc và sau. sort(a,b) {a&gt;b} true và false</p><p id="661f6cc3-a48b-43c5-a114-04c5a46de63c" class=""> - includes</p><p id="2e7ab472-4480-4499-b7c9-c58611c6630d" class=""> - find</p><p id="859979e7-28ec-4b87-9f87-8911744c075a" class=""> - split và join: dùng trong string là nhiều. Join ngược lại vs spilt</p><p id="9661a7fe-869e-43a5-a57f-70f437a74553" class=""> - join trả về spring, split trả về array
+</p><p id="3375293c-633b-4db9-94b2-60b2adf83fae" class="">+VD: a = &quot;Hello World!&quot;</p><p id="fc36e2e7-0ebd-4793-91b7-fc2cd5f3de63" class="">a.split (&quot; &quot;)</p><p id="b20d38f4-e339-4af3-afe1-0f4a70e41567" class="">⇒ [&quot;Hello,World&quot;]
+</p><p id="8ae8e47a-c56d-4ae4-aca0-d3cbd8005152" class="">[&quot;Hello,World&quot;].join(&quot; ,&quot;)</p><p id="b4afd33b-5e2c-4e32-b70a-66bd6886f776" class="">⇒&quot;Hello,world!&quot;</p><p id="82596e31-a150-4826-93b2-ff7c2cd10b4b" class="">
+</p><ul id="e255c16c-a382-4891-8c5b-7a962fa70ea1" class="bulleted-list"><li>Trong json key và value phải xài nháy đôi ngoài ra dùng gì cũng dc</li></ul></div></article></body></html>

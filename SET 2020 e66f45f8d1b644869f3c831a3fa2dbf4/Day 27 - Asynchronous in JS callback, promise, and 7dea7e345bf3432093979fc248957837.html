@@ -1,0 +1,653 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Day 27 - Asynchronous in JS: callback, promise, and async/await</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="7dea7e34-5bf3-4320-9397-9fc248957837" class="page sans"><header><h1 class="page-title">Day 27 - Asynchronous in JS: callback, promise, and async/await</h1></header><div class="page-body"><p id="5e5b8e50-b34f-4fc9-a981-2e42c316d715" class="">Concurrency: A quay lại chờ B xong mới chạy tiếp</p><p id="e5ba455c-5248-47d4-9969-9e3816f253ef" class="">A  ———            ———</p><p id="5a470f3c-6870-4335-8eed-7ca88813729c" class="">B             _______</p><h2 id="b436ecc0-0487-4cf1-85f8-5e5537e6fab1" class="">I. Stack LIFO</h2><p id="d4cd08a7-5d39-430b-baca-5686241a7d88" class=""> - Trc h code FRONTEND là Synchronous (đồng bộ)</p><p id="0c4d6ed1-c438-4b25-98ea-ac9c35d4ee9d" class=""> - Khi chạy foo() sẽ push foo() vào stack, sau đó sẽ gọi hàm foo</p><p id="de26b5fd-6025-430f-a422-6b9d943ac316" class=""> - Sau khi chạy foo() sẽ pop foo() khỏi Stack</p><p id="365e84e6-c4bc-490d-b461-4c056d181ff1" class=""> - Khi hết sẽ thành Stack rỗng</p><p id="91aa152e-7604-4966-a1da-08d8338e8d20" class="">
+</p><figure id="6d072c49-efaa-4b20-a490-8444d80bb7d5" class="image"><a href="Day%2027%20-%20Asynchronous%20in%20JS%20callback,%20promise,%20and%207dea7e345bf3432093979fc248957837/Untitled.png"><img style="width:687px" src="Day%2027%20-%20Asynchronous%20in%20JS%20callback,%20promise,%20and%207dea7e345bf3432093979fc248957837/Untitled.png"/></a></figure><h2 id="c966c873-2230-4d9d-b3fd-3bd4b0b75593" class="">II. Queue FIFO</h2><ul id="45e352fa-a5f7-46b9-963a-2edbdee0ed0f" class="bulleted-list"><li>Là 1 hàng chờ mà chỉ đc chạy khi Stack rỗng</li></ul><p id="9ca3249b-c8d3-431f-b2f8-a9475f677d94" class="">
+</p><figure id="7169640a-5cad-4d86-b9ec-44a3ddd4ae9a" class="image"><a href="Day%2027%20-%20Asynchronous%20in%20JS%20callback,%20promise,%20and%207dea7e345bf3432093979fc248957837/Untitled%201.png"><img style="width:1494px" src="Day%2027%20-%20Asynchronous%20in%20JS%20callback,%20promise,%20and%207dea7e345bf3432093979fc248957837/Untitled%201.png"/></a></figure><p id="fa78c94b-ee23-45b4-b94c-58f0b5043cab" class=""> - setTimeout(bar, 0). Bar là callback, 0 (millisecond) là thời gian đợi</p><p id="cc63cc40-fc9a-4eae-9660-19575850ed08" class="">⇒ đợi <strong><mark class="highlight-red">n </mark></strong>ms sẽ push hàm callback vào Queue và đợi</p><p id="eb89d123-3363-4d50-aa47-ad650af9c890" class=""> - Sau khi Stack free mới push hàm đầu tiên trong Queue vào Stack để chạy</p><p id="110ef258-7a19-4732-ad48-60e9b44edb15" class=""> - Sau đó check Queue còn hay ko nếu ko thì ngừng app</p><p id="8701ea8e-d95c-41fa-b8f6-30b5784e7160" class=""><mark class="highlight-red">callback tức là truyền một đoạn code (Hàm A) này vào một đoạn code khác (Hàm B). Tới một thời điểm nào đó, Hàm A sẽ được hàm B gọi lại (callback).</mark></p><p id="ce2432a6-82ca-4c19-a759-eaea26db6adf" class="">
+</p><h1 id="1f1f194f-2e20-432c-8225-524a86ff72a4" class=""><strong>Promises: </strong></h1><p id="18d645ff-683f-4326-ac29-2408419ea875" class="">Một <code>Promises</code> sẽ có 3 trạng thái:</p><ol id="6a43e6be-af0e-4831-aa15-87b4f34950bd" class="numbered-list" start="1"><li>Pending: Khởi tạo 1 hoạt động bất đồng bộ, mà xử lý sẽ trả về resolved(xử lý xong) or rejected(từ chối).</li></ol><ol id="29254bae-2ecd-4ebe-b317-c33421b4fa6f" class="numbered-list" start="2"><li>Fulfilled: Một hành động bất đồng bộ đúng và xử lý trả về kết quả.</li></ol><ol id="bf81d179-81b5-479d-918b-1891b8ba4dd4" class="numbered-list" start="3"><li>Rejected: Một hành động bất đồng bộ sai, và <code>promises</code> là <code>rejected</code> và trả về thông báo lỗi. Các thư viện <code>Promises</code> chỉ hoạt động với hàm callback.</li></ol><p id="4456fe9b-5ed8-4ef4-87a8-a5ac98dca650" class="">.then → Cho phép truy cập vô cái data mà nó gọi cái hàm resolve</p><p id="e8815bbc-50f3-4aa3-91be-6543ab474086" class="">.then → lấy kq của .then trước truyền vào biến đầu tiên của .then này</p><p id="64cb1765-bd8b-4549-8f03-68a60c9e6542" class="">.catch → If error ghi ra trong cái cb → Nếu có lỗi thì gọi cái .catch</p><p id="953e768b-37a7-4d7e-a89c-1c9f2c31e217" class="">Sử dụng <code>promises</code>, <code>then</code> sẽ dễ sử dụng, dễ mudule hóa hơn vì thế code dễ đọc và dễ bảo trì hơn. Một vài điểm đáng chú ý của <code>promises</code>:</p><ul id="1bbe1a9c-a508-40a8-a71c-adb0036a41d1" class="bulleted-list"><li>Một <code>promises</code> có một <code>then</code> thì function <code>callbacks</code> sẽ được thực thi ngay khi <code>promises</code> xử lý</li></ul><ul id="f3cccf76-0638-41b3-a773-a3b17dd0bfd5" class="bulleted-list"><li>Hàm <code>then</code> luôn trả về một <code>promises</code>, cho phép chúng ta tạo <code>Promise Chains (gọi nối)</code>
+Biến đầu tiên của .then sau là kq của .then trc đó</li></ul><ul id="014fff0a-30a3-4d4e-93aa-6af9ab8f237e" class="bulleted-list"><li>Một <code>promises</code> cũng có thể dùng được try catch.</li></ul><ul id="fd008531-b5a2-4ef6-973a-6b6fbaa7ea58" class="bulleted-list"><li>Promise.prototype.then().catch.()</li></ul><h1 id="f77836f4-34cf-4672-b5d5-6f3e06354f42" class=""><strong>Async/await</strong></h1><p id="7bce4b89-0abf-48a8-a810-1c8d0f16a19c" class=""><code>async/await</code> thực chất là một <code>promises</code></p><ul id="674aa49d-0f9f-431a-b234-4e547b375933" class="bulleted-list"><li><code>await</code> chỉ được dùng trong <code>async</code></li></ul><ul id="be3f79f9-c19f-4edf-b944-82e4f8877dc7" class="bulleted-list"><li>Một <code>async function</code> luôn trả về 1 <code>promise</code></li></ul><ul id="d205ec3e-82f9-4b00-91a1-4e1efe9ad91d" class="bulleted-list"><li><strong>Async</strong> – khai báo một hàm bất đồng bộ (async function someName(){…}).<ul id="5afa6a69-a167-4ef6-b33e-d6a3c99e1d46" class="bulleted-list"><li>Tự động biến đổi một hàm thông thường thành một Promise.</li></ul><ul id="8fbf9983-1f88-4750-a9b8-68baaf46851f" class="bulleted-list"><li>Khi gọi tới hàm async nó sẽ xử lý mọi thứ và được trả về kết quả trong hàm của nó.</li></ul><ul id="468bf1d4-11d1-4130-b014-09a901931f38" class="bulleted-list"><li>Async cho phép sử dụng Await.</li></ul></li></ul><ul id="0a96e7fb-50e4-4ada-8621-e1e7da470413" class="bulleted-list"><li><strong>Await</strong> – tạm dừng việc thực hiện các hàm async. (Var result = await someAsyncCall ()😉.<ul id="8dd5e92d-ca83-4f48-b4fc-4dd8e88593a4" class="bulleted-list"><li>Khi được đặt trước một Promise, nó sẽ đợi cho đến khi Promise kết thúc và trả về kết quả.</li></ul><ul id="93472485-08bd-4d45-bb14-6509347c6e6c" class="bulleted-list"><li>Await chỉ làm việc với Promises, nó không hoạt động với callbacks.</li></ul><ul id="ac84fb7e-82ee-4bff-b69f-dcb4f2d5f06a" class="bulleted-list"><li>Await chỉ có thể được sử dụng bên trong các function async.</li></ul></li></ul><ul id="2bc3aa25-62fc-464a-8fac-2c291aa461b7" class="bulleted-list"><li>Await cho phép đợi 1 hàm promise</li></ul><ul id="b2fefe77-6807-42c9-aec5-cf9579e2673c" class="bulleted-list"><li>Async đánh dấu hàm đó trả về 1 giá trị promise</li></ul><p id="6bf08c7f-4df4-47b2-8eab-43bddcc07e2e" class="">
+stackOverflow: hàm lồng hàm ⇒ tràn bộ nhớ</p><p id="b6523b88-4935-4b97-afe6-a881893a44fd" class="">
+</p><ul id="1c3acef5-8228-4746-a526-0fbd99c62d25" class="bulleted-list"><li>Note </li></ul><pre id="823c0b2d-03bf-4512-aeb0-0b12cd038436" class="code"><code><em>//cau hoi thuong xuyen khi di Interview
+</em>function fn1() {
+console.log(&quot;1&quot;)
+}
+function fn2() {
+console.log(&quot;2&quot;)
+}
+function fn3() {
+setTimeout(() =&gt; console.log(&quot;3&quot;), 0)
+}
+function fn4() {
+setTimeout(() =&gt; console.log(&quot;4&quot;), 2)
+}
+fn4()
+fn3()
+fn2()
+fn1()
+⇒ 2 1 3 4</code></pre><ul id="77988d59-8ef3-4315-84cd-37643b5a1eb9" class="bulleted-list"><li>Thay callback = .then</li></ul><p id="554099f6-7a9d-4b51-9454-84e0806faf31" class="">
+</p><p id="cc67a804-3bc7-49ee-bc0a-b4d597206035" class=""><em>//ES6</em></p><p id="66b3c624-2e99-4f7f-bd95-52b2283c66ea" class="">fs.readFile()</p><p id="3de57246-6b34-4fad-bc95-5c26a6fa5d49" class="">.then(data =&gt; fs.lstat(path))</p><p id="e9507996-f089-46cb-a510-63babaab2705" class="">.then(stat =&gt; )</p><p id="dc562c86-60c7-48d1-b487-8ce752130006" class="">.catch(err =&gt; log(err))</p><p id="137470d8-2485-44e3-86d6-011dd9f8638c" class=""><em>//ES5</em></p><p id="6f20012d-ba18-4235-8234-f097fdda958a" class="">fs.readFile(path, err, data) {</p><p id="c766061f-eaf8-4d19-a650-195e4333a4f4" class="">if (err) return err</p><p id="3ba7d604-2881-462f-a27e-5b37d42bd041" class="">fs.lstat(path, cb(err, stat))</p><p id="4e45bf52-afa7-4ca3-90d7-d958b4a6f6d4" class="">}</p><p id="9d372e61-8645-4f99-8624-ed90282db042" class="">
+</p><p id="c1804d4f-20da-4719-a6de-c1fb15a6c095" class="">
+</p><p id="ebb30534-da54-423c-8620-1fdd261175df" class="">BT: POST 1 file chứa string có số</p><p id="8120c727-b08b-4744-aaa0-0dff8de2a12b" class="">return 1 file chứa tổng</p><p id="6b6959bc-bc7d-4bd7-a675-5a7d15e9d5b0" class="">Dùng Promise</p><p id="8f09eaba-4110-4e1d-9966-da0501334cb8" class="">0 dùng async/await</p><figure id="82922119-2a26-4007-abc3-4bef496e7f91"><a href="https://viblo.asia/p/hieu-ve-co-che-xu-ly-su-kien-event-loop-trong-javascript-07LKXjX2lV4" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">Hiểu về cơ chế xử lý sự kiện Event Loop trong Javascript</div><div class="bookmark-description">Xin chào mọi người, hôm nay mình quay lại với một bài viết về Event Loop một trong những khai niệm vẫn còn khá mơ hồ và khó hiểu đối với những người mới làm quen với Javascript. Trước tiên hay nói một...</div></div><div class="bookmark-href"><img src="https://viblo.asia/favicon-128.png" class="icon bookmark-icon"/>https://viblo.asia/p/hieu-ve-co-che-xu-ly-su-kien-event-loop-trong-javascript-07LKXjX2lV4</div></div><img src="https://images.viblo.asia/465aff14-91bc-4b28-b565-e967c78e63cc.gif" class="bookmark-image"/></a></figure></div></article></body></html>

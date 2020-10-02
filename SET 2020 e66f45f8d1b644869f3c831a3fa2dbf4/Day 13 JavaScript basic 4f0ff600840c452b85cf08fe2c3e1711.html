@@ -1,0 +1,655 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Day 13: JavaScript: basic</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="4f0ff600-840c-452b-85cf-08fe2c3e1711" class="page sans"><header><h1 class="page-title">Day 13: JavaScript: basic</h1></header><div class="page-body"><h1 id="d187c2ab-9df9-463b-abf1-5f17cfbcd70d" class="">                                    JavaScript</h1><ul id="b554fc78-a610-4dc2-9c7e-060b8e30aa47" class="bulleted-list"><li>Note: Java và JavaScript đlq gì nhau ngoài giống chữ java
+</li></ul><p id="f2a89d2d-bb78-413d-8e83-49d1b1514a35" class="">I.</p><p id="81586f6d-fa20-4abb-8096-46412343a314" class=""> - JavaScript là 1 ngôn ngữ script (kịch bản). Hễ nhắc tới script ⇒ ngôn ngữ bậc cao</p><p id="25e8b694-4704-4aae-8bd6-08ffb389540c" class=""> - JS ko hề có compiler vì JS dựa trên Interpreter (file đc đọc trực tiếp để cái máy có thể chạy đc)</p><p id="a2b8c1a4-7d1e-4647-9065-25ccf77cb5fe" class="">⇒ ở đây Interpreter là Browser. Ko can thiệp trực tiếp vào hệ thống mà các lớp đã đc lập trình sẵn</p><p id="4bfe7fbf-7c5f-4ff0-a850-36130f820653" class=""> - Các ngôn ngữ khác dùng compiler để tạo ra các file mà máy đọc đc. Có thể xoá file gốc vẫn chạy đc.</p><p id="3ffa921e-c4ce-4094-9184-65a91dc80653" class=""> - JS nếu xoá file thì máy ko chạy đc</p><p id="a1e5bea7-df58-4af4-91cb-67f4039d6e83" class=""> - Ngôn ngữ thông dịch (JavaScript): sẽ hướng dẫn cho browser cách tương tác vs OS và Hardware.</p><p id="29e25411-ba51-4685-b052-18593e4a58d2" class=""> - Compiler sẽ nhanh hơn Interpreter vì đc biên dịch thành mã máy và tương tác trực tiếp với OS.</p><p id="2e1d6635-3c0c-40cb-a523-513800c3bcf3" class="">⇒ Điểm yếu: ko bảo đảm là bê qua OS khác sẽ đọc đc.
+</p><ul id="69d6cb5f-5f82-4612-a31a-164a3cbf4cfc" class="bulleted-list"><li>Note: VS Code đc viết = JS trên nền electron chạy đc đa nền tảng
+⇒ Điểm mạnh của Interpreter</li></ul><p id="150ca9ce-bd26-47dd-a9c8-61c310df7474" class=""> - Interpreter chạy chậm: sau này có WebAssembly <strong>(phải vừa thạo C và JS)</strong> </p><p id="fb8c5d86-0b2c-45e5-b23c-565d0e070879" class="">⇒ compile thẳng ra binary</p><p id="5e7174e5-3ec4-46e6-bab5-662596125dda" class="">⇒ tốc độ bàn thờ but khoá này ko chơi =))
+</p><ul id="a71f07cc-1a22-4814-ac4d-3e54e1c6349e" class="bulleted-list"><li>Điểm mạnh của JavaScript: đa nền tảng, dễ học</li></ul><ul id="7ffd90c3-9ed4-4dc3-9d9c-75d5ed5f68d8" class="bulleted-list"><li>Điểm yếu: khó master</li></ul><p id="c14cb573-fc86-48cd-8710-0ee6117cfab7" class="">⇒ learning path: 2 điểm cách nhau càng gần càng dễ học
+</p><ul id="690ae0d3-c50a-4369-808d-4dde01acdaa0" class="bulleted-list"><li>Ngoài lề: Variable gồm</li></ul><ol id="6cb4b44d-025c-4d0d-b3f8-57f7d77eeda9" class="numbered-list" start="1"><li>Name</li></ol><ol id="c3a2954a-ece7-4e78-a166-dff8fc311073" class="numbered-list" start="2"><li>Value</li></ol><ol id="0bda320a-2b8c-4e91-90da-9562a3e1484b" class="numbered-list" start="3"><li>Data type: </li></ol><p id="0b35930c-83fd-4efd-ad9e-f9e134d7c9e5" class=""> - strong/static type (C++, Pascal): kiểu dữ liệu có thể thay đổi, theo luật</p><p id="2a20b649-5e7b-442e-b566-7b64972d50f1" class=""> - và week/dynamic type (Python): chơi tự do</p><p id="5ffbe06c-dded-4aee-a381-476d15fa177a" class="">
+</p><p id="7f593255-b5c4-43da-b089-1621e8dd4555" class="">II.</p><ul id="94d01641-9455-47e2-ade8-f99eca37e75a" class="bulleted-list"><li>Biến JavaScript:</li></ul><p id="c6991e45-29ca-46f9-943c-f76536b13f70" class=""> - var a = 3 ⇒ number or &quot;abc&quot; ⇒ string (a là char)</p><p id="45878b1d-fe94-44fd-8731-a19ca8ba1ca9" class=""> - ngoài ra còn undefined, null, symbol
+⇒ primitive type, nhưng chỉ char mới là còn string ko phải.</p><p id="725dcaa6-c31c-49ee-8285-369a345390a8" class=""> - có thể so sánh bằng đc
+⇒ ngoài 5 cái này thì còn lại đều là reference type
+</p><ul id="44703704-181f-49fc-b254-b7415b1f1b86" class="bulleted-list"><li>script.js ⇒ <code>&lt;script src = &quot;x.script.js&quot;&gt;&lt;/script&gt;</code></li></ul><p id="5da3b007-d5f6-4bd8-9d56-5898ac182cc9" class=""> - ở đây x = console.log(&quot;hello world&quot;)</p><p id="9b519796-d214-43d0-b3b4-298c5283cfbe" class="">
+</p><ul id="c9f93065-46a1-46cd-8034-77cb8d1b698e" class="bulleted-list"><li>Note: dùng let, const (ko dùng var, bí lắm mới dùng)</li></ul><p id="a7857edd-9946-4b13-85f0-13d19d40ae93" class="">var f = 3;</p><p id="81641916-a182-48bf-999d-2ce4a786c44d" class="">{</p><p id="6bdbac06-5e75-492b-9a54-701e87b2d78a" class="">var a = 4;</p><p id="8bbe51f6-deab-4f5f-a164-fb450884327b" class="">}</p><p id="927c27d3-b1b3-4eb6-8100-850fdfa0b42e" class="">⇒ shadow variable (khai báo 2 biến cùng 1 tên nhưng có 2 giá trị) ⇒ hỏi Lagger</p><p id="d650532d-80fb-48a6-a703-a541d3a4ea5b" class="">
+</p><p id="6e66e48f-1e99-40d6-a5f3-656310896a06" class="">III. Các loại reference type: </p><p id="b02e71ad-5df4-4a5c-8dc1-49f62a052bd9" class=""> - Note: Tất cả các reference type trong Js đều là object</p><ol id="cffd4628-fada-4a87-8816-9b8aa9ef62fe" class="numbered-list" start="1"><li>Boolean</li></ol><ol id="4b2a4b9c-ff76-4a69-b330-f7d446fb2d2b" class="numbered-list" start="2"><li>Object</li></ol><p id="70532bca-f1cc-4a8f-98d2-8f5a70544383" class=""> - gồm 1 method và 1 property (có tí OOP)</p><p id="1d049577-edb2-406e-857e-00755e9b9114" class=""> - có 2 loại: anonymous object và declarative object</p><p id="dd057054-d9c8-4d3b-b04f-2993e86c7838" class="">3. Function</p><p id="6acf00b9-2b1c-4cd4-adb9-403dce8f9358" class=""> - JavaScript là ngôn ngữ first-class function (lấy từ first-class citizen)</p><p id="7af4984a-c55a-4f07-a7a4-f7c4141661f7" class="">⇒ quan trọng, ko phải ngôn ngữ nào cũng có. </p><p id="bed8a9c0-5837-4ef4-b530-3ddab13e65e6" class="">⇒ <strong>Cho phép ta xem function là 1 biến số</strong></p><p id="939b7dbf-f256-4617-bc0d-8c6c20049eac" class="">
+</p><p id="5d66acb7-f9ab-46ea-9ccd-6b9f9aec0d2e" class=""> - switch (var) {....}</p><p id="08ebc8a7-8f57-4481-b37d-ee2e83039649" class="">    case value: {</p><p id="45cb6920-5af0-4036-a7bb-49ce86dd9004" class="">
+</p><p id="9b20d43e-7df4-480a-a820-fa9920ae1b91" class="">     } break;
+
+</p><ul id="d33504f8-87a0-4f9a-ab3d-ed8166c5da92" class="bulleted-list"><li>vòng lặp: </li></ul><p id="0a537fe6-af01-400f-9c78-6ea1de7f6a9b" class=""> - while ( ) { ....... } ⇒ thực tế đi làm ít dùng vì nguy hiểm</p><p id="3c21aac7-bdb7-418c-acc5-64bd3656ec94" class=""> - for (var = i=0; i&lt;n; i++) {......}
+</p><p id="bd903046-85f3-4c62-91f3-d7a7837656d7" class="">- vd: function sum (a,b,c). a = 3, b = 5, c = subtract</p><p id="d84d6963-e82e-43e7-b784-2c696d3c575e" class="">
+</p><p id="66ee1251-2c7d-4926-bae7-1a50f65965a4" class=""> - cú pháp: function name (parameters) {....} return
+</p><p id="3fb30c69-66a4-4853-ad3a-180faa40c3ec" class="">4. String
+
+
+
+
+
+
++ Yêu cầu: </p><p id="ae003972-46a7-419b-98e5-af40d75fde73" class=""> - ngoặc ko đc xuống dòng</p><p id="8e1c9d9b-7d21-404e-acb2-8c4b399fa1bf" class=""> - ko đc dùng if, for 1 dòng, luôn có ngoặc</p><p id="d9f0e93e-0ef2-4ac3-b903-90839773216f" class=""> - ko đc viết tắt</p><p id="0b993425-b6ed-48c9-9a81-80a7c8da741f" class=""> - các biến, tên fucntion phải đc viết dạng Pamals Case
+</p><ul id="3890c09e-abf5-4de5-b9c4-28f85087aa6f" class="bulleted-list"><li>BTVN:</li></ul><p id="94793322-1ca4-4b5a-a4d6-0365463f918b" class=""> - Lý thuyết: JS có phải là ngôn ngữ OOP hay ko: </p><figure id="31437b9c-3cad-40b2-8805-10d65ddc2b60"><a href="https://medium.com/jsland/oop-l%E1%BA%A1i-kh%C3%B4ng-ph%E1%BA%A3i-l%C3%A0-oop-trong-js-74cc0a236725" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">OOP lại không phải là OOP trong JS</div><div class="bookmark-description">OOP được biết đến như là một định nghĩa về lập trình hướng đối tượng. Ngày nay có rất nhiều ngôn ngữ hỗ trợ OOP khá tốt. Hôm nay chúng ta không bàn OOP tốt như thế nào, học nó ra sao, làm sao...</div></div><div class="bookmark-href"><img src="https://cdn-static-1.medium.com/_/fp/icons/favicon-rebrand-medium.3Y6xpZ-0FSdWDnPM3hSBIA.ico" class="icon bookmark-icon"/>https://medium.com/jsland/oop-l%E1%BA%A1i-kh%C3%B4ng-ph%E1%BA%A3i-l%C3%A0-oop-trong-js-74cc0a236725</div></div><img src="https://miro.medium.com/max/1200/0*YmY-azaj6n9OvF4g.jpg" class="bookmark-image"/></a></figure><p id="62bf467e-5c8c-4e2e-afb2-b0f79a06d717" class=""> - Thực hành</p><p id="45e86b77-147d-41e3-986a-510305e987b5" class="">
+</p><figure id="ea690efb-0e26-4f5e-b3a4-1ac41c7d2c58" class="image"><a href="Day%2013%20JavaScript%20basic%204f0ff600840c452b85cf08fe2c3e1711/Untitled.png"><img style="width:405px" src="Day%2013%20JavaScript%20basic%204f0ff600840c452b85cf08fe2c3e1711/Untitled.png"/></a></figure><p id="cbae4987-c38f-4eb5-b0df-e5872459f955" class="">
+</p></div></article></body></html>
